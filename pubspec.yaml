@@ -36,6 +36,15 @@ dependencies:
   hugeicons: ^1.1.7
   flutter_riverpod: ^2.6.1
   firebase_core: ^4.9.0
+  google_sign_in: ^6.2.0
+  firebase_auth: ^6.5.1
+  flutter_easyloading: ^3.0.5
+  dio: ^5.9.2
+  pretty_dio_logger: ^1.4.0
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
+  fluttertoast: ^9.1.0
+  firebase_messaging: ^16.2.2
 
 dev_dependencies:
   flutter_test:

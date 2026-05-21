@@ -17,6 +17,10 @@ const closedColor = Color(0xffED6B6B);
 const pendingColor = Color(0xffB4B4B4);
 const upcomingColor = Color(0xffF5B041);
 
+/// Flashcard Color
+const successColor = Colors.green;
+const errorColor = Color(0xffED6B6B);
+
 /// TEXT COLORS
 const bigTextColor = Color(0xff585858);
 const textColor = Color(0xff000000);

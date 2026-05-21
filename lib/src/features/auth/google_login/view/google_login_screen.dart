@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:todo_app/src/features/common/view/app_button/app_button.dart';
+import 'package:todo_app/src/features/auth/google_login/controller/google_login_controller.dart';
 import '../../../../core/config/constant/assets_path.dart';
 import '../../../../core/utils/extensions/context.dart';
 import '../../../../core/utils/extensions/gap.dart';
 import '../../../../core/utils/theme/theme.dart';
 
-class GoogleLoginScreen extends StatefulWidget {
+class GoogleLoginScreen extends ConsumerStatefulWidget {
   const GoogleLoginScreen({super.key});
 
   @override
-  State<GoogleLoginScreen> createState() => _GoogleLoginScreenState();
+  ConsumerState<GoogleLoginScreen> createState() => _GoogleLoginScreenState();
 }
 
-class _GoogleLoginScreenState extends State<GoogleLoginScreen>
+class _GoogleLoginScreenState
+    extends ConsumerState<GoogleLoginScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeIn;
@@ -46,6 +48,9 @@ class _GoogleLoginScreenState extends State<GoogleLoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(googleSignInProvider);
+    final notifier = ref.read(googleSignInProvider.notifier);
+
     return Scaffold(
       backgroundColor: primaryColor,
       body: Hero(
@@ -121,7 +126,9 @@ class _GoogleLoginScreenState extends State<GoogleLoginScreen>
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          notifier.continueWithGoogle();
+                        },
                         style: OutlinedButton.styleFrom(
                           elevation: 0,
                           foregroundColor: primaryColor,
