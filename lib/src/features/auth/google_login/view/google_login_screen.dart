@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todo_app/src/features/common/view/app_button/app_button.dart';
 import '../../../../core/config/constant/assets_path.dart';
 import '../../../../core/utils/extensions/context.dart';
@@ -117,10 +118,39 @@ class _GoogleLoginScreenState extends State<GoogleLoginScreen>
                       ],
                     ),
                     40.ph,
-                    AppButton(
-                      text: "Sign in with Google",
-                      showArrow: true,
-                      onTap: () {},
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(
+                          elevation: 0,
+                          foregroundColor: primaryColor,
+                          side: BorderSide(color: primaryColor, width: 1.2),
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(99),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              AssetsPath.googleLogo,
+                              width: 32,
+                              height: 32,
+                            ),
+                            8.pw,
+                            Text(
+                              "Sign in with Google",
+                              style: context.text.titleMedium?.copyWith(
+                                color: primaryColor,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

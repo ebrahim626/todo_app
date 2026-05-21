@@ -6,6 +6,7 @@ class AssetsPath {
   /// **************** Images ****************
   static const String loginCartoon = '$_images/login_cartoon.png';
   static const String transparentLogo = '$_images/todo_logo.png';
+  static const String googleLogo = '$_images/google_logo.png';
   // static const String backgroundImage = '$_images/background.png';
   // static const String backgroundRing = '$_images/background_ring.png';
   // static const String starAsset = '$_images/star_asset.png';
