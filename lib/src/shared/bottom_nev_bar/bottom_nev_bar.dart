@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:todo_app/src/core/utils/theme/theme.dart';
 
 import '../../core/router/app_routers.dart';
+import 'components/bottom_nav_container.dart';
+import 'components/build_item.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key, required this.child});
@@ -16,23 +19,41 @@ class BottomNavBar extends StatelessWidget {
     return Scaffold(
       body: child,
       extendBody: true,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
+      bottomNavigationBar: BottomNavContainer(
+        currentIndex: _getSelectedIndex(context, ),
         onTap: (index) => _onItemTapped(context, index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedGoogleHome),
-            activeIcon: HugeIcon(icon: HugeIcons.strokeRoundedGoogleHome),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedTransactionHistory),
-            activeIcon: HugeIcon(icon: HugeIcons.strokeRoundedTransactionHistory),
-            label: 'History',
-          ),
-        ],
+        navItems: _buildNavItems(context),
       ),
     );
+  }
+  // items: const [
+  // BottomNavigationBarItem(
+  // icon: HugeIcon(icon: HugeIcons.strokeRoundedGoogleHome),
+  // activeIcon: HugeIcon(icon: HugeIcons.strokeRoundedGoogleHome),
+  // label: 'Home',
+  // ),
+  // BottomNavigationBarItem(
+  // icon: HugeIcon(icon: HugeIcons.strokeRoundedTransactionHistory),
+  // activeIcon: HugeIcon(icon: HugeIcons.strokeRoundedTransactionHistory),
+  // label: 'History',
+  // ),
+  // ],
+  // ),
+  //
+
+  List<BottomNavigationBarItem> _buildNavItems(BuildContext context) {
+      return [
+        BottomNavUtils.buildItem(
+          icon: Icons.home,
+          activeIcon: Icons.home,
+          label: 'Home',
+        ),
+        BottomNavUtils.buildItem(
+          icon: Icons.history,
+          activeIcon: Icons.history,
+          label: 'Home',
+        )
+    ];
   }
 
   void _onItemTapped(BuildContext context, int index) {
