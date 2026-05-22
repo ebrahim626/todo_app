@@ -18,7 +18,7 @@ class BottomNavContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: context.isAndroid ? 12 : 18.0),
+      // padding: EdgeInsets.only(bottom: context.isAndroid ? 12 : 18.0),
       color: primaryColor,
       child: MediaQuery.removePadding(
         context: context,
@@ -31,6 +31,8 @@ class BottomNavContainer extends StatelessWidget {
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,
           type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
           items: navItems,
         ),
       ),
