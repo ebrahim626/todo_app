@@ -82,8 +82,8 @@ class GoogleSignInProvider extends AutoDisposeAsyncNotifier {
       final repo = ref.read(signInRepository);
       final response = await repo.sign(signInRequest);
 
-      if (response.data != null && response.data['success'] == true) {
-        final token = response.data['data']['accessToken'];
+      if (response.data['isSuccess'] == true) {
+        final token = response.data['data']['token'];
 
         if (token != null) {
           log('✅ Step 5 Success: Storing token...');
@@ -91,6 +91,7 @@ class GoogleSignInProvider extends AutoDisposeAsyncNotifier {
           store.setLoggedIn(true);
           store.setBearerToken(token);
           ref.invalidate(cacheServiceProvider);
+          FlashCard.showSuccess(message: "Login Successful");
           EasyLoading.dismiss();
           return true;
         } else {

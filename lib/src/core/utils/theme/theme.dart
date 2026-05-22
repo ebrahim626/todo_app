@@ -18,7 +18,7 @@ const pendingColor = Color(0xffB4B4B4);
 const upcomingColor = Color(0xffF5B041);
 
 /// Flashcard Color
-const successColor = Colors.green;
+const successColor = Color(0xff34C759);
 const errorColor = Color(0xffED6B6B);
 
 /// TEXT COLORS
