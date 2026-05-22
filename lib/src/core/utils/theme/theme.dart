@@ -26,7 +26,7 @@ const bigTextColor = Color(0xff585858);
 const textColor = Color(0xff000000);
 
 /// BODY TEXT COLOR (same as previous)
-const bodyTextColor = Color(0xff6F6C6A);
+const bodyTextColor = Color(0xff000000);
 const greyContainer = Color(0xffD9D9D9);
 
 /// BACKGROUND
@@ -49,7 +49,7 @@ final textTheme = TextTheme(
 
   titleSmall: TextStyle(
     fontSize: 14,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w400,
     color: textColor,
   ),
 
