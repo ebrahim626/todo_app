@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:todo_app/src/features/auth/google_login/controller/google_login_controller.dart';
 import '../../../../core/config/constant/assets_path.dart';
+import '../../../../core/router/app_routers.dart';
 import '../../../../core/utils/extensions/context.dart';
 import '../../../../core/utils/extensions/gap.dart';
 import '../../../../core/utils/theme/theme.dart';
@@ -128,8 +130,11 @@ class _GoogleLoginScreenState
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton(
-                        onPressed: () {
-                          notifier.continueWithGoogle();
+                        onPressed: () async {
+                          final success = await notifier.continueWithGoogle();
+                          if (success && mounted) {
+                            context.go(AppRoutes.homeRoute); // 👈 add this
+                          }
                         },
                         style: OutlinedButton.styleFrom(
                           elevation: 0,

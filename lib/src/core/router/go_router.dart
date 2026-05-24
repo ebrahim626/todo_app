@@ -4,34 +4,30 @@ final goNavigatorKey = GlobalKey<NavigatorState>();
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: AppRoutes.getStartedRoute,
+    initialLocation: AppRoutes.splashScreenRoute, // 👈 start here
     navigatorKey: goNavigatorKey,
     debugLogDiagnostics: true,
     routes: <RouteBase>[
-      // GoRoute(
-      //   path: AppRoutes.homeRoute,
-      //   name: HomeScreen.name,
-      //   builder: (_, state) => HomeScreen(),
-      // ),
+      GoRoute(
+        path: AppRoutes.splashScreenRoute,        // 👈 add this
+        name: SplashScreen.name,
+        builder: (_, __) => const SplashScreen(),
+      ),
       GoRoute(
         path: AppRoutes.getStartedRoute,
         name: GetStartedScreen.name,
-        builder: (context, state) => GetStartedScreen(),
+        builder: (_, __) => const GetStartedScreen(),
       ),
       GoRoute(
-        path: AppRoutes.splashScreenRoute,
+        path: AppRoutes.getStartedRoute,
         name: GoogleLoginScreen.name,
-        builder: (context, state) => GoogleLoginScreen(),
+        builder: (_, __) => const GoogleLoginScreen(),
       ),
       ShellRoute(
-        builder: (context, state, child) {
-          return BottomNavBar(child: child);
-        },
+        builder: (context, state, child) => BottomNavBar(child: child),
         routes: [
           GoRoute(path: AppRoutes.homeRoute, name: HomeScreen.name, builder: (_, __) => const HomeScreen()),
-
           GoRoute(path: AppRoutes.historyRoute, name: HistoryScreen.name, builder: (_, __) => const HistoryScreen()),
-
         ],
       ),
     ],

@@ -15,8 +15,8 @@ class GetStartedScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context , WidgetRef ref) {
-    ref.watch(getStartedProvider(context));
-    final notifier = ref.read(getStartedProvider(context).notifier);
+    ref.watch(getStartedProvider);
+    final notifier = ref.read(getStartedProvider.notifier);
 
     return Scaffold(
       backgroundColor: primaryColor,
