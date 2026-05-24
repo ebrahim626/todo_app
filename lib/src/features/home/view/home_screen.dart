@@ -28,7 +28,9 @@ class HomeScreen extends StatelessWidget {
                 StatusDot(label: 'Upcoming', color: upcomingColor),
                 Spacer(),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Implement menu action here
+                  },
                   icon: Icon(Icons.menu, size: 32),
                   padding: EdgeInsets.zero,
                   constraints:
