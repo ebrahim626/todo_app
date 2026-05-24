@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/src/core/utils/extensions/context.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
-import 'package:todo_app/src/features/common/view/divider/app_divider.dart';
 import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
 import '../../../core/utils/extensions/gap.dart';
 import 'components/status_dots.dart';

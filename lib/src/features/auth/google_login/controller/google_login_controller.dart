@@ -15,10 +15,11 @@ typedef GoogleSignInNotifier =
 
 final googleSignInProvider = GoogleSignInNotifier(GoogleSignInProvider.new);
 
-class GoogleSignInProvider extends AutoDisposeAsyncNotifier {
+class GoogleSignInProvider extends AutoDisposeAsyncNotifier<void> {
   @override
-  FutureOr build() {
+  FutureOr build()  {
     //throw UnimplementedError();
+
   }
 
   Future<bool> continueWithGoogle() async {
@@ -93,6 +94,8 @@ class GoogleSignInProvider extends AutoDisposeAsyncNotifier {
           ref.invalidate(cacheServiceProvider);
           FlashCard.showSuccess(message: "Login Successful");
           EasyLoading.dismiss();
+          final bool isLoggedIn = await store.isLoggedIn;
+          log("login status: $isLoggedIn");
           return true;
         } else {
           log('❌ No accessToken in response.');

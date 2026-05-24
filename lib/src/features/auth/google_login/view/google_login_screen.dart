@@ -10,6 +10,8 @@ import '../../../../core/utils/theme/theme.dart';
 class GoogleLoginScreen extends ConsumerStatefulWidget {
   const GoogleLoginScreen({super.key});
 
+  static const String name = '/';
+
   @override
   ConsumerState<GoogleLoginScreen> createState() => _GoogleLoginScreenState();
 }

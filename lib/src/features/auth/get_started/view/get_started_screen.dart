@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/src/features/auth/get_started/controller/get_started_controller.dart';
 import 'package:todo_app/src/features/auth/google_login/view/google_login_screen.dart';
 import '../../../../core/config/constant/assets_path.dart';
 import '../../../../core/utils/extensions/context.dart';
@@ -7,11 +8,16 @@ import '../../../../core/utils/extensions/gap.dart';
 import '../../../../core/utils/theme/theme.dart';
 import '../../../common/view/app_button/app_button.dart';
 
-class GetStartedScreen extends StatelessWidget {
+class GetStartedScreen extends ConsumerWidget {
   const GetStartedScreen({super.key});
 
+  static const String name = "get-started";
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context , WidgetRef ref) {
+    ref.watch(getStartedProvider(context));
+    final notifier = ref.read(getStartedProvider(context).notifier);
+
     return Scaffold(
       backgroundColor: primaryColor,
       body: Column(

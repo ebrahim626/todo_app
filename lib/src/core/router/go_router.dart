@@ -4,7 +4,7 @@ final goNavigatorKey = GlobalKey<NavigatorState>();
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: AppRoutes.homeRoute,
+    initialLocation: AppRoutes.getStartedRoute,
     navigatorKey: goNavigatorKey,
     debugLogDiagnostics: true,
     routes: <RouteBase>[
@@ -13,6 +13,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       //   name: HomeScreen.name,
       //   builder: (_, state) => HomeScreen(),
       // ),
+      GoRoute(
+        path: AppRoutes.getStartedRoute,
+        name: GetStartedScreen.name,
+        builder: (context, state) => GetStartedScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.splashScreenRoute,
+        name: GoogleLoginScreen.name,
+        builder: (context, state) => GoogleLoginScreen(),
+      ),
       ShellRoute(
         builder: (context, state, child) {
           return BottomNavBar(child: child);

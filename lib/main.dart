@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:todo_app/src/core/config/constant/app_constants.dart';
 import 'package:todo_app/src/core/config/size/size.dart';
 import 'package:todo_app/src/core/router/go_router.export.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
-import 'package:todo_app/src/features/auth/get_started/view/get_started_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_app/src/features/common/view/easy_loading_color_ring/AnimatedDualColorRing.dart';
 import 'firebase_options.dart';
@@ -27,6 +24,8 @@ Future<void> main() async {
   //await Hive.openBox<PromotionPage>(AppConstants.wishListKey);
   await Hive.openBox<dynamic>(AppConstants.hiveKey);
 
+  await ScreenUtil.ensureScreenSize();
+
   runApp(ProviderScope(child: const MyApp()));
 }
 
@@ -40,7 +39,8 @@ void configEasyLoading(BuildContext context) {
     ..backgroundColor = Colors.transparent
     ..indicatorColor = Colors.transparent
     ..textColor = Colors.transparent
-    ..maskColor = Colors.black.withOpacity(0.3)
+    // ..maskColor = Colors.black.withOpacity(0.3)
+    ..maskColor = Colors.black.withAlpha(20) // Very light mask for better visibility of the rotating ring, but still prevents interactions
     ..maskType = EasyLoadingMaskType.custom
     ..userInteractions = false
     ..dismissOnTap = false
