@@ -185,7 +185,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
         headerTitleBuilder: (context, day) {
           return Column(
             children: [
-              const AppDivider(height: 1,thickness: 1,),
+              // const AppDivider(height: 1,thickness: 1,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -196,7 +196,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         _focusedDay.month - 1,
                       );
                     }),
-                    icon: const Icon(Icons.chevron_left),
+                    icon: const Icon(Icons.chevron_left,size: 30),
                   ),
 
                   // 👆 Tap to pick month/year
@@ -207,7 +207,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         Text(
                           '${_monthName(day.month)}  ${day.year}',
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 2,
                           ),
@@ -223,10 +223,11 @@ class _HomeCalendarState extends State<HomeCalendar> {
                         _focusedDay.month + 1,
                       );
                     }),
-                    icon: const Icon(Icons.chevron_right),
+                    icon: const Icon(Icons.chevron_right,size: 30),
                   ),
                 ],
               ),
+              5.ph,
               const AppDivider(height: 1,thickness: 1,),
               16.ph,
             ],
