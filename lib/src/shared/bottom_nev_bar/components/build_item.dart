@@ -9,11 +9,11 @@ class BottomNavUtils {
     return BottomNavigationBarItem(
       icon: Padding(
         padding: const EdgeInsets.only(bottom: 3.0),
-        child: Icon(icon, size: 30,),
+        child: Icon(icon, size: 28,),
       ),
       activeIcon: Padding(
         padding: const EdgeInsets.only(bottom: 3.0),
-        child: Icon(activeIcon ?? icon,size: 38,),
+        child: Icon(activeIcon ?? icon,size: 36,),
       ),
       label: label,
     );

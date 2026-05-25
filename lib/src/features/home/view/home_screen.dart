@@ -15,6 +15,19 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 75,
+        ), // adjust to sit above your nav bar
+        child: FloatingActionButton(
+          onPressed: () {},
+
+          shape: const CircleBorder(
+            side: BorderSide(color: backgroundColor, width: 2),
+          ),
+          child: const Icon(Icons.add, size: 40),
+        ),
+      ),
       backgroundColor: backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 45),
@@ -104,9 +117,96 @@ class HomeScreen extends StatelessWidget {
                                       8.pw,
                                       CardStatusWidget(statusTitle: "Done"),
                                       Spacer(),
-                                      InkWell(
-                                        onTap: () {
-                                          // Implement more options action here
+                                      GestureDetector(
+                                        onTapDown: (TapDownDetails details) {
+                                          final RenderBox overlay =
+                                              Overlay.of(
+                                                    context,
+                                                  ).context.findRenderObject()
+                                                  as RenderBox;
+                                          showMenu(
+                                            context: context,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadiusGeometry.circular(
+                                                    12,
+                                                  ),
+                                            ),
+                                            color: const Color(
+                                              0xffEEFAFF,
+                                            ), // menu background color
+                                            position: RelativeRect.fromRect(
+                                              details.globalPosition &
+                                                  const Size(40, 40),
+                                              Offset.zero & overlay.size,
+                                            ),
+                                            items: [
+                                              PopupMenuItem<String>(
+                                                value: 'edit',
+                                                height: 40,
+                                                child: ListTile(
+                                                  dense: true,
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                      ),
+                                                  title: Text("Edit"),
+                                                ),
+                                              ),
+                                              PopupMenuItem<String>(
+                                                value: 'reschedule',
+                                                height: 40,
+                                                child: ListTile(
+                                                  dense: true,
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                      ),
+                                                  title: Text("Reschedule"),
+                                                ),
+                                              ),
+                                              PopupMenuItem<String>(
+                                                value: 'change_status',
+                                                height: 40,
+                                                child: ListTile(
+                                                  dense: true,
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                      ),
+                                                  title: Text("Change Status"),
+                                                ),
+                                              ),
+                                              PopupMenuItem<String>(
+                                                value: 'delete',
+                                                height: 40,
+                                                child: ListTile(
+                                                  dense: true,
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                      ),
+                                                  title: Text(
+                                                    "Delete",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ), // 👈 red delete
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ).then((value) {
+                                            if (value == 'edit') {
+                                              // handle edit
+                                            } else if (value == 'reschedule') {
+                                              // handle reschedule
+                                            } else if (value ==
+                                                'change_status') {
+                                              // handle change status
+                                            } else if (value == 'delete') {
+                                              // handle delete
+                                            }
+                                          });
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(3),
@@ -168,69 +268,13 @@ class HomeScreen extends StatelessWidget {
                                       //   ),
                                       // )
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                             );
                           },
                         ),
-                        // Row(
-                        //   children: [
-                        //     Expanded(
-                        //       child: Container(
-                        //         child: Column(
-                        //           children: [
-                        //             //CachedNetworkImage(imageUrl: ),
-                        //
-                        //             ClipRRect(
-                        //               borderRadius: BorderRadius.circular(12),
-                        //               child: CachedNetworkImage(
-                        //                 imageUrl: "https://static.vecteezy.com/system/resources/thumbnails/020/441/564/small/street-racing-illustration-icon-red-sport-car-template-illustration-can-use-logo-t-shirt-apparel-sticker-group-community-poster-flyer-banner-modify-auto-show-vector.jpg",
-                        //                 height: 120,
-                        //                 width: double.infinity,
-                        //                 fit: BoxFit.cover,
-                        //                 placeholder: (context, url) => Container(
-                        //                   height: 120,
-                        //                   width: double.infinity,
-                        //                   color: Colors.grey[300],
-                        //                   child: Center(
-                        //                     child: CircularProgressIndicator.adaptive(),
-                        //                   ),
-                        //                 ),
-                        //                 errorWidget: (context, url, error) => Container(
-                        //                   height: 120,
-                        //                   width: double.infinity,
-                        //                   color: Colors.grey[300],
-                        //                   child: Icon(Icons.error),
-                        //                 ),
-                        //                 errorListener: (value){},
-                        //               ),
-                        //             ),
-                        //             Text("Private car dallas"),
-                        //             AppButton(
-                        //               color: primaryColor,
-                        //               onPressed: () {},
-                        //               child: Text("Book Now",
-                        //                 style: context.text.titleSmall?.copyWith(
-                        //                   color: Colors.white,
-                        //                   fontWeight: FontWeight.w600
-                        //                 ),
-                        //               ),
-                        //             )
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // )
-                        // ListView.builder(
-                        //   shrinkWrap: true,
-                        //   physics: const NeverScrollableScrollPhysics(),
-                        //   itemCount: 100, // You should add itemCount
-                        //   itemBuilder: (context, index) {
-                        //     return Text("Hello $index");
-                        //   },
-                        // ),
+                        145.ph,
                       ],
                     ),
                   ),
