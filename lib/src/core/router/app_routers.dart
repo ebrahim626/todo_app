@@ -4,4 +4,5 @@ class AppRoutes {
   static const String getStartedRoute = '/get-started';
   static const String homeRoute = '/home';
   static const String historyRoute = '/history-screen';
+  static const String addTaskRoute = '/add-task';
 }

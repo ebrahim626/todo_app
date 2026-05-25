@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:todo_app/src/core/router/app_routers.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
 import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
@@ -20,7 +22,9 @@ class HomeScreen extends StatelessWidget {
           bottom: 75,
         ), // adjust to sit above your nav bar
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            context.push(AppRoutes.addTaskRoute);
+          },
 
           shape: const CircleBorder(
             side: BorderSide(color: backgroundColor, width: 2),

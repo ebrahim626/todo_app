@@ -21,17 +21,25 @@ const upcomingColor = Color(0xffF5B041);
 const successColor = Color(0xff34C759);
 const errorColor = Color(0xffED6B6B);
 
+///Divider Color
+const dividerColor = Color(0xffBFBFBF);
+
 /// TEXT COLORS
 const bigTextColor = Color(0xff585858);
 const textColor = Color(0xff000000);
+const hintTextColor = Color(0xffA9A9A9);
 
 /// BODY TEXT COLOR (same as previous)
 const bodyTextColor = Color(0xff000000);
+
+///Container Colors
 const greyContainer = Color(0xffD9D9D9);
 
 /// BACKGROUND
 const backgroundColor = Color(0xffEEFAFF);
 const scaffoldBackgroundColor = backgroundColor;
+
+const stockColor = Color(0xffE2E2E2);
 
 
 final textTheme = TextTheme(
