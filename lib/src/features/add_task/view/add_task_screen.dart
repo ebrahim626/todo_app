@@ -5,7 +5,6 @@ import 'package:todo_app/src/features/common/view/drop_down/custom_drop_down.dar
 import 'package:todo_app/src/features/common/view/text_field/custom_textfield_with_label.dart';
 import '../../../core/utils/extensions/context.dart';
 
-
 class AddTaskScreen extends StatelessWidget {
   const AddTaskScreen({super.key});
 
@@ -71,6 +70,183 @@ class AddTaskScreen extends StatelessWidget {
               items: ["hi", "asdasfa", "sdg"],
               onSelectionChanged: (v) {},
               itemToString: (item) => item,
+            ),
+            14.ph,
+            Row(
+              children: [
+                Text(
+                  "Task Priority",
+                  style: context.text.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  "*",
+                  style: context.text.titleSmall?.copyWith(color: Colors.red),
+                ),
+              ],
+            ),
+            8.ph,
+            CustomDropDownPlus<String>(
+              label: "Select Task Priority",
+              backgroundColor: Colors.white,
+              width: MediaQuery.sizeOf(context).width * 0.9,
+              items: ["hi", "asdasfa", "sdg"],
+              onSelectionChanged: (v) {},
+              itemToString: (item) => item,
+            ),
+            14.ph,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Due Date",
+                            style: context.text.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "*",
+                            style: context.text.titleSmall?.copyWith(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                      8.ph,
+                      CustomDropDownPlus<String>(
+                        label: "Select Date",
+                        backgroundColor: Colors.white,
+                        width: double.infinity,
+                        items: ["hi", "asdasfa", "sdg"],
+                        onSelectionChanged: (v) {},
+                        itemToString: (item) => item,
+                      ),
+                    ],
+                  ),
+                ),
+                14.pw,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min, // ← important
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Due Time",
+                            style: context.text.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "*",
+                            style: context.text.titleSmall?.copyWith(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                      8.ph,
+                      CustomDropDownPlus<String>(
+                        label: "Select Time",
+                        backgroundColor: Colors.white,
+                        width: double.infinity,
+                        items: ["hi", "asdasfa", "sdg"],
+                        onSelectionChanged: (v) {},
+                        itemToString: (item) => item,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            14.ph,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Start Date",
+                            style: context.text.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "*",
+                            style: context.text.titleSmall?.copyWith(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                      8.ph,
+                      CustomDropDownPlus<String>(
+                        label: "Select Start Date",
+                        backgroundColor: Colors.white,
+                        width: double.infinity,
+                        items: ["hi", "asdasfa", "sdg"],
+                        onSelectionChanged: (v) {},
+                        itemToString: (item) => item,
+                      ),
+                    ],
+                  ),
+                ),
+                14.pw,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min, // ← important
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "End Date",
+                            style: context.text.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "*",
+                            style: context.text.titleSmall?.copyWith(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                      8.ph,
+                      CustomDropDownPlus<String>(
+                        label: "Select End Date",
+                        backgroundColor: Colors.white,
+                        width: double.infinity,
+                        items: ["hi", "asdasfa", "sdg"],
+                        onSelectionChanged: (v) {},
+                        itemToString: (item) => item,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            14.ph,
+            CustomTextFieldWithLabel(
+              label: "Task Description",
+              hintText: "Enter your task description",
+              maxLines: 7,
+              optional: true,
             ),
           ],
         ),
