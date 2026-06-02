@@ -17,9 +17,9 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   // Map date to multiple colors
   final Map<DateTime, List<Color>> _taskColorMap = {
-    DateTime(2026, 5, 3): [Colors.teal, Colors.red, Colors.grey],
-    DateTime(2026, 5, 4): [Colors.orange, Colors.red],
-    DateTime(2026, 5, 8): [Colors.red, Colors.teal],
+    DateTime(2026, 6, 3): [Colors.teal, Colors.red, Colors.grey],
+    DateTime(2026, 6, 4): [Colors.orange, Colors.red],
+    DateTime(2026, 6, 8): [Colors.red, Colors.teal],
   };
 
   List<Color> _getColorsForDay(DateTime day) {
@@ -156,11 +156,12 @@ class _HomeCalendarState extends State<HomeCalendar> {
       availableCalendarFormats: const {CalendarFormat.month: 'Month'},
       calendarStyle: CalendarStyle(
         outsideDaysVisible: false,
+        todayTextStyle: TextStyle(color: textColor),
         todayDecoration: BoxDecoration(
-          color: primaryColor,
+          color: backgroundColor,
           shape: BoxShape.circle,
           border: Border.all(
-            color: upcomingColor,
+            color: primaryColor,
             width: 2,
             strokeAlign: BorderSide.strokeAlignInside,
           ),
