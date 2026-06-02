@@ -72,10 +72,14 @@ class AddTaskScreen extends ConsumerWidget {
             8.ph,
             CustomDropDownPlus<String>(
               label: "Task Type",
+              selectedItem: notifier.selectedTaskType,
+              height: MediaQuery.sizeOf(context).height * 0.65,
               backgroundColor: Colors.white,
               width: MediaQuery.sizeOf(context).width * 0.9,
-              items: ["hi", "asdasfa", "sdg"],
-              onSelectionChanged: (v) {},
+              items: notifier.taskTypes,
+              onSelectionChanged: (v) {
+                notifier.onTaskTypeChange(v);
+              },
               itemToString: (item) => item,
             ),
             14.ph,
@@ -97,9 +101,12 @@ class AddTaskScreen extends ConsumerWidget {
             CustomDropDownPlus<String>(
               label: "Select Task Priority",
               backgroundColor: Colors.white,
+              selectedItem: notifier.selectedTaskPriority,
               width: MediaQuery.sizeOf(context).width * 0.9,
-              items: ["hi", "asdasfa", "sdg"],
-              onSelectionChanged: (v) {},
+              items: ["Must Do", "Should Do", "Can Wait"],
+              onSelectionChanged: (v) {
+                notifier.onTaskPriorityChange(v);
+              },
               itemToString: (item) => item,
             ),
             14.ph,
@@ -147,14 +154,14 @@ class AddTaskScreen extends ConsumerWidget {
                           DateTime maxDate;
 
                           // Adult: 18 years or older
-                          maxDate = DateTime(now.year, now.month, now.day);
+                          maxDate = DateTime(3000);
                           minDate = DateTime(
                             1900,
                           ); // Or any reasonable minimum date
 
                           final selectedDate = await PlatformDatePicker.show(
                             context,
-                            initialDate: notifier.selectedDueDate ?? maxDate,
+                            initialDate: notifier.selectedDueDate ?? now,
                             minimumDate: minDate,
                             maximumDate: maxDate,
                             primaryButtonText: "Select",
@@ -253,7 +260,7 @@ class AddTaskScreen extends ConsumerWidget {
                           DateTime maxDate;
 
                           // Adult: 18 years or older
-                          maxDate = DateTime(now.year, now.month, now.day);
+                          maxDate = DateTime(3000);
                           minDate = DateTime(
                             1900,
                           ); // Or any reasonable minimum date
@@ -261,7 +268,7 @@ class AddTaskScreen extends ConsumerWidget {
                           final selectedDate = await PlatformDatePicker.show(
                             context,
                             initialDate:
-                                notifier.selectedReminderDate ?? maxDate,
+                                notifier.selectedReminderDate ?? now,
                             minimumDate: minDate,
                             maximumDate: maxDate,
                             primaryButtonText: "Select",
@@ -323,10 +330,7 @@ class AddTaskScreen extends ConsumerWidget {
               optional: true,
             ),
             Spacer(),
-            AppButton(
-                text: "Add Task",
-              onTap: () {},
-            ),
+            AppButton(text: "Add Task", onTap: () {}),
           ],
         ),
       ),
