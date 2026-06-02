@@ -9,6 +9,7 @@ final addTaskProvider = AddTaskNotifier(AddTaskProvider.new);
 class AddTaskProvider extends AutoDisposeAsyncNotifier{
 
   DateTime? selectedDueDate;
+  DateTime? selectedReminderDate;
 
   @override
   FutureOr<dynamic> build() {
@@ -18,6 +19,12 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier{
   void onDueDateChange(DateTime? date) {
     if (date != null) {
       selectedDueDate = date;
+      ref.notifyListeners();
+    }
+  }
+  void onReminderDateChange(DateTime? date) {
+    if (date != null) {
+      selectedReminderDate = date;
       ref.notifyListeners();
     }
   }

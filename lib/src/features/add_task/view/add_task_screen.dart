@@ -4,11 +4,11 @@ import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/utils/extensions/gap.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import 'package:todo_app/src/features/add_task/controller/add_task_provider.dart';
+import 'package:todo_app/src/features/common/view/app_button/app_button.dart';
 import 'package:todo_app/src/features/common/view/drop_down/custom_drop_down.dart';
 import 'package:todo_app/src/features/common/view/text_field/custom_textfield_with_label.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../common/view/platform/platform_date_picker.dart';
-
 
 class AddTaskScreen extends ConsumerWidget {
   const AddTaskScreen({super.key});
@@ -111,15 +111,32 @@ class AddTaskScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Due Date",
+                            style: context.text.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            "*",
+                            style: context.text.titleSmall?.copyWith(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
                       8.ph,
                       CustomTextFieldWithLabel(
-                        label: "Due Date",
-                        hintText: "Select Due Date",
+                        hintText: "Select Date",
                         isRequired: "*",
                         readOnly: true,
                         controller: TextEditingController(
                           text: notifier.selectedDueDate != null
-                              ? DateFormatter.formatDate(notifier.selectedDueDate!)
+                              ? DateFormatter.formatDate(
+                                  notifier.selectedDueDate!,
+                                )
                               : "",
                         ),
                         onTap: () async {
@@ -129,9 +146,11 @@ class AddTaskScreen extends ConsumerWidget {
                           DateTime minDate;
                           DateTime maxDate;
 
-                            // Adult: 18 years or older
-                            maxDate = DateTime(now.year, now.month, now.day);
-                            minDate = DateTime(1900); // Or any reasonable minimum date
+                          // Adult: 18 years or older
+                          maxDate = DateTime(now.year, now.month, now.day);
+                          minDate = DateTime(
+                            1900,
+                          ); // Or any reasonable minimum date
 
                           final selectedDate = await PlatformDatePicker.show(
                             context,
@@ -145,7 +164,10 @@ class AddTaskScreen extends ConsumerWidget {
                             notifier.onDueDateChange(selectedDate);
                           }
                         },
-                        trailing: Icon(Icons.calendar_today),
+                        trailing: Icon(
+                          Icons.calendar_today,
+                          color: hintTextColor,
+                        ),
                       ),
                     ],
                   ),
@@ -198,7 +220,7 @@ class AddTaskScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Text(
-                            "Start Date",
+                            "Reminder Date",
                             style: context.text.titleSmall?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -212,13 +234,47 @@ class AddTaskScreen extends ConsumerWidget {
                         ],
                       ),
                       8.ph,
-                      CustomDropDownPlus<String>(
-                        label: "Select Start Date",
-                        backgroundColor: Colors.white,
-                        width: double.infinity,
-                        items: ["hi", "asdasfa", "sdg"],
-                        onSelectionChanged: (v) {},
-                        itemToString: (item) => item,
+                      CustomTextFieldWithLabel(
+                        hintText: "Select Date",
+                        isRequired: "*",
+                        readOnly: true,
+                        controller: TextEditingController(
+                          text: notifier.selectedReminderDate != null
+                              ? DateFormatter.formatDate(
+                                  notifier.selectedReminderDate!,
+                                )
+                              : "",
+                        ),
+                        onTap: () async {
+                          // Calculate min and max dates based on selected student age
+                          final now = DateTime.now();
+
+                          DateTime minDate;
+                          DateTime maxDate;
+
+                          // Adult: 18 years or older
+                          maxDate = DateTime(now.year, now.month, now.day);
+                          minDate = DateTime(
+                            1900,
+                          ); // Or any reasonable minimum date
+
+                          final selectedDate = await PlatformDatePicker.show(
+                            context,
+                            initialDate:
+                                notifier.selectedReminderDate ?? maxDate,
+                            minimumDate: minDate,
+                            maximumDate: maxDate,
+                            primaryButtonText: "Select",
+                          );
+
+                          if (selectedDate != null) {
+                            notifier.onReminderDateChange(selectedDate);
+                          }
+                        },
+                        trailing: Icon(
+                          Icons.calendar_today,
+                          color: hintTextColor,
+                        ),
                       ),
                     ],
                   ),
@@ -232,7 +288,7 @@ class AddTaskScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Text(
-                            "End Date",
+                            "Reminder Time",
                             style: context.text.titleSmall?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -247,7 +303,7 @@ class AddTaskScreen extends ConsumerWidget {
                       ),
                       8.ph,
                       CustomDropDownPlus<String>(
-                        label: "Select End Date",
+                        label: "Select Time",
                         backgroundColor: Colors.white,
                         width: double.infinity,
                         items: ["hi", "asdasfa", "sdg"],
@@ -265,6 +321,11 @@ class AddTaskScreen extends ConsumerWidget {
               hintText: "Enter your task description",
               maxLines: 7,
               optional: true,
+            ),
+            Spacer(),
+            AppButton(
+                text: "Add Task",
+              onTap: () {},
             ),
           ],
         ),

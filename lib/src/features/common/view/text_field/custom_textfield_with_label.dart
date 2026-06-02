@@ -161,6 +161,13 @@ class _CustomTextFieldWithLabelState extends State<CustomTextFieldWithLabel> {
                     color: hintTextColor,
                     fontWeight: FontWeight.w500,
                   ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).unselectedWidgetColor.withAlpha(30),
+                  width: 1,
+                ),
+              ),
               isDense: true,
               prefixIcon: widget.leading,
               suffixIcon:

@@ -127,7 +127,7 @@ class CustomDropDownPlus<T> extends StatelessWidget {
             width: containerWidth,
             padding: EdgeInsets.symmetric(
               horizontal: 14.w,
-              vertical: verticalPadding ?? 12.h,
+              vertical: verticalPadding ?? 10.h,
             ),
             decoration: BoxDecoration(
               border: Border.all(
