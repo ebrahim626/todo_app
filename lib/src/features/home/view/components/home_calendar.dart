@@ -142,6 +142,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
     return TableCalendar(
       firstDay: DateTime.utc(2020, 1, 1),
       lastDay: DateTime.utc(2030, 12, 31),
+      daysOfWeekHeight: 26,
 
       focusedDay: _focusedDay,
       selectedDayPredicate: (day) => isSameDay(_selectedDay, day),

@@ -48,11 +48,10 @@ class BottomNavBar extends StatelessWidget {
           activeIcon: Icons.home,
           label: 'Home',
         ),
-        BottomNavUtils.buildItem(
-          icon: Icons.history,
-          activeIcon: Icons.history,
-          label: 'Home',
-        )
+        BottomNavUtils.notificationItem(
+          label: 'History',
+          notificationCount: 5,
+        ),
     ];
   }
 

@@ -72,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                     floating: true,
                     pinned: false,
                     backgroundColor: backgroundColor,
-                    expandedHeight: 355,
+                    expandedHeight: 358,
                     collapsedHeight: 0,
                     toolbarHeight: 0,
                     elevation: 0,
