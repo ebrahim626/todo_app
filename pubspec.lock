@@ -105,6 +105,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.9"
+  date_picker_timeline:
+    dependency: "direct main"
+    description:
+      path: "packages/date_picker_timeline_flutter"
+      relative: true
+    source: path
+    version: "1.2.7"
   dio:
     dependency: "direct main"
     description:

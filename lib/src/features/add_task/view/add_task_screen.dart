@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/utils/extensions/gap.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
+import 'package:todo_app/src/features/add_task/controller/add_task_provider.dart';
 import 'package:todo_app/src/features/common/view/drop_down/custom_drop_down.dart';
 import 'package:todo_app/src/features/common/view/text_field/custom_textfield_with_label.dart';
 import '../../../core/utils/extensions/context.dart';
+import '../../common/view/platform/platform_date_picker.dart';
 
-class AddTaskScreen extends StatelessWidget {
+
+class AddTaskScreen extends ConsumerWidget {
   const AddTaskScreen({super.key});
 
   static const String name = "add-task";
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    ref.watch(addTaskProvider);
+    final notifier = ref.read(addTaskProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -104,30 +111,41 @@ class AddTaskScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Due Date",
-                            style: context.text.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            "*",
-                            style: context.text.titleSmall?.copyWith(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
-                      ),
                       8.ph,
-                      CustomDropDownPlus<String>(
-                        label: "Select Date",
-                        backgroundColor: Colors.white,
-                        width: double.infinity,
-                        items: ["hi", "asdasfa", "sdg"],
-                        onSelectionChanged: (v) {},
-                        itemToString: (item) => item,
+                      CustomTextFieldWithLabel(
+                        label: "Due Date",
+                        hintText: "Select Due Date",
+                        isRequired: "*",
+                        readOnly: true,
+                        controller: TextEditingController(
+                          text: notifier.selectedDueDate != null
+                              ? DateFormatter.formatDate(notifier.selectedDueDate!)
+                              : "",
+                        ),
+                        onTap: () async {
+                          // Calculate min and max dates based on selected student age
+                          final now = DateTime.now();
+
+                          DateTime minDate;
+                          DateTime maxDate;
+
+                            // Adult: 18 years or older
+                            maxDate = DateTime(now.year, now.month, now.day);
+                            minDate = DateTime(1900); // Or any reasonable minimum date
+
+                          final selectedDate = await PlatformDatePicker.show(
+                            context,
+                            initialDate: notifier.selectedDueDate ?? maxDate,
+                            minimumDate: minDate,
+                            maximumDate: maxDate,
+                            primaryButtonText: "Select",
+                          );
+
+                          if (selectedDate != null) {
+                            notifier.onDueDateChange(selectedDate);
+                          }
+                        },
+                        trailing: Icon(Icons.calendar_today),
                       ),
                     ],
                   ),
