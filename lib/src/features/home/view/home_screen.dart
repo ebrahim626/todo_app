@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/src/core/router/app_routers.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
+import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
 import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
 import '../../../core/utils/extensions/context.dart';
@@ -9,13 +11,17 @@ import '../../../core/utils/extensions/gap.dart';
 import '../../common/view/divider/app_divider.dart';
 import 'components/status_dots.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   static const String name = 'home';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(homeControllerProvider);
+    final notifier = ref.watch(homeControllerProvider.notifier);
+    final tasks = ref.watch(homeControllerProvider.notifier).todoTasks;
+
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
@@ -50,6 +56,7 @@ class HomeScreen extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     // Implement menu action here
+                    notifier.logOut(context);
                   },
                   icon: Icon(Icons.menu, size: 32),
                   padding: EdgeInsets.zero,
@@ -96,11 +103,12 @@ class HomeScreen extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 15,
+                          itemCount: tasks?.length ?? 0,
                           separatorBuilder: (BuildContext context, int index) {
                             return 10.ph;
                           },
                           itemBuilder: (context, index) {
+                            final task = tasks?[index];
                             return Container(
                               width: double.infinity,
                               padding: EdgeInsets.all(8),
@@ -114,12 +122,12 @@ class HomeScreen extends StatelessWidget {
                                   Row(
                                     children: [
                                       CardStatusWidget(
-                                        statusTitle: "Maintenance",
+                                        statusTitle: "${task?.title}",
                                       ),
                                       8.pw,
-                                      CardStatusWidget(statusTitle: "Must Do"),
+                                      CardStatusWidget(statusTitle: "${task?.taskPriority}"),
                                       8.pw,
-                                      CardStatusWidget(statusTitle: "Done"),
+                                      CardStatusWidget(statusTitle: "${task?.taskStatus}"),
                                       Spacer(),
                                       GestureDetector(
                                         onTapDown: (TapDownDetails details) {
@@ -230,14 +238,14 @@ class HomeScreen extends StatelessWidget {
                                     ],
                                   ),
                                   Text(
-                                    "Need To Fix Main Door Lock",
+                                    "${task?.taskType}",
                                     style: context.text.titleSmall?.copyWith(
                                       color: Colors.white,
                                     ),
                                   ),
                                   4.ph,
                                   Text(
-                                    "Main door lock got broken need to contact a good key mechanic as soon as possible  Mostafijur knows a good...",
+                                    "${task?.description}",
                                     style: context.text.bodySmall?.copyWith(
                                       color: Colors.white,
                                     ),
@@ -246,7 +254,7 @@ class HomeScreen extends StatelessWidget {
                                     children: [
                                       Spacer(),
                                       Text(
-                                        "Today, 10:00 AM",
+                                        "Due: ${task?.dueDate}",
                                         style: context.text.bodySmall?.copyWith(
                                           color: Colors.white,
                                         ),

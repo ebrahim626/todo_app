@@ -88,6 +88,7 @@ class GoogleSignInProvider extends AutoDisposeAsyncNotifier<void> {
 
         if (token != null) {
           log('✅ Step 5 Success: Storing token...');
+          log("token : $token");
           final store = ref.read(cacheServiceProvider);
           store.setLoggedIn(true);
           store.setBearerToken(token);
