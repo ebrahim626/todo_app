@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/src/core/router/app_routers.dart';
+import 'package:todo_app/src/core/service/time_formatter.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
@@ -254,7 +255,7 @@ class HomeScreen extends ConsumerWidget {
                                     children: [
                                       Spacer(),
                                       Text(
-                                        "Due: ${task?.dueDate}",
+                                        "Due: ${DateTimeFormatter.time(task?.dueDate)}",
                                         style: context.text.bodySmall?.copyWith(
                                           color: Colors.white,
                                         ),
