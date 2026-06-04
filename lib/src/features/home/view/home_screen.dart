@@ -123,7 +123,7 @@ class HomeScreen extends ConsumerWidget {
                                   Row(
                                     children: [
                                       CardStatusWidget(
-                                        statusTitle: "${task?.title}",
+                                        statusTitle: "${task?.taskType}",
                                       ),
                                       8.pw,
                                       CardStatusWidget(statusTitle: "${task?.taskPriority}"),
@@ -239,7 +239,7 @@ class HomeScreen extends ConsumerWidget {
                                     ],
                                   ),
                                   Text(
-                                    "${task?.taskType}",
+                                    "${task?.title}",
                                     style: context.text.titleSmall?.copyWith(
                                       color: Colors.white,
                                     ),
