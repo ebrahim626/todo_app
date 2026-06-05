@@ -8,7 +8,6 @@ import 'package:todo_app/src/features/home/view/components/task_priority.dart';
 import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
 import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
-import 'package:todo_app/src/features/home/view/components/task_status.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../common/view/divider/app_divider.dart';
@@ -123,7 +122,7 @@ class HomeScreen extends ConsumerWidget {
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  color: notifier.getStatusColor(task?.taskStatus ?? 1),
+                                  color: primaryColor,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +135,7 @@ class HomeScreen extends ConsumerWidget {
                                         8.pw,
                                         CardStatusWidget(statusTitle: "${TaskPriority.getLabel(task?.taskPriority ?? 1)}"),
                                         8.pw,
-                                        CardStatusWidget(statusTitle: "${TaskStatus.getLabel(task?.taskStatus ?? 1)}"),
+                                        CardStatusWidget(statusTitle: "${task?.taskStatus}"),
                                         Spacer(),
                                         GestureDetector(
                                           onTapDown: (TapDownDetails details) {
@@ -240,7 +239,7 @@ class HomeScreen extends ConsumerWidget {
                                             child: Icon(
                                               Icons.more_vert,
                                               size: 18,
-                                              color: notifier.getStatusColor(task?.taskStatus ?? 1),
+                                              color: primaryColor,
                                             ),
                                           ),
                                         ),
