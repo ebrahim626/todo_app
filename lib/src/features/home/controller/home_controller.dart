@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,8 @@ import 'package:todo_app/src/core/router/app_routers.dart';
 import 'package:todo_app/src/features/home/get_task_model/response/get_task_model.dart';
 import 'package:todo_app/src/features/home/repository/home_repository.dart';
 import 'package:todo_app/src/shared/toast/toast.dart';
+
+import '../../../core/utils/theme/theme.dart';
 
 typedef HomeControllerProvider = AutoDisposeAsyncNotifierProvider<HomeController, dynamic>;
 
@@ -23,10 +26,29 @@ class HomeController extends AutoDisposeAsyncNotifier {
      await getTasks();
   }
 
+  Color getStatusColor(int status) {
+    switch (status) {
+      case 1:
+        return primaryColor;
+      case 2:
+        return closedColor;
+      case 3:
+        return pendingColor;
+      case 4:
+        return upcomingColor;
+      default:
+        return Colors.grey;
+    }
+  }
+
   Future<void> logOut(BuildContext context) async {
     ref.watch(cacheServiceProvider);
     await ref.read(cacheServiceProvider).clearAuthTokens();
     context.push(AppRoutes.splashScreenRoute);
+  }
+
+  Future<void> refresh() async {
+    await getTasks();
   }
 
   FutureOr<void> getTasks() async {

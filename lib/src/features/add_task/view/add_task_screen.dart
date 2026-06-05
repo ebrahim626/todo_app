@@ -108,7 +108,7 @@ class AddTaskScreen extends ConsumerWidget {
                 backgroundColor: Colors.white,
                 selectedItem: notifier.selectedTaskPriority,
                 width: MediaQuery.sizeOf(context).width * 0.9,
-                items: ["Must Do", "Should Do", "Can Wait"],
+                items: notifier.taskPriorities,
                 onSelectionChanged: (v) {
                   notifier.onTaskPriorityChange(v);
                 },

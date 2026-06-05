@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/src/features/home/view/components/task_priority.dart';
 import 'package:todo_app/src/features/add_task/model/request/create_task_request_model.dart';
 import 'package:todo_app/src/features/add_task/repository/add_task_repository.dart';
+import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/shared/toast/toast.dart';
 
 typedef AddTaskNotifier =
@@ -46,6 +48,13 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
     'Social',
     'Other',
   ];
+
+  List<String> taskPriorities = [
+    'Must Do',
+    'Should Do',
+    'Can Wait',
+  ];
+
   String? selectedTaskType;
   String? selectedTaskPriority;
   TimeOfDay? selectedDueTime;
@@ -162,7 +171,7 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
       CreateTaskRequest createTaskRequest = CreateTaskRequest(
           title: taskTitleController.text,
           taskStatus: 1,
-          taskPriority: 1,
+          taskPriority: TaskPriority.getValue(selectedTaskPriority ?? "") ?? 0,
           taskType: selectedTaskType ?? "",
           dueDate: selectedDueDate ?? DateTime.now(),
           reminderDate: selectedReminderDate ?? DateTime.now(),
@@ -171,6 +180,7 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
       final response = await repo.addTask(createTaskModel: createTaskRequest);
       if (response.statusCode == 200 || response.statusCode == 201) {
         FlashCard.showSuccess(message: "Task added successfully");
+        ref.invalidate(homeControllerProvider);
         context.pop();
       } else {
         log("Error adding task: ${response.data}");
