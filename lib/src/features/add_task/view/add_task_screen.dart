@@ -222,7 +222,7 @@ class AddTaskScreen extends ConsumerWidget {
                             final selectedTime = await PlatformTimePicker.show(
                               context,
                               initialTime:
-                                  notifier.selectedDueTime ?? TimeOfDay.now(),
+                                  notifier.selectedDueTime ?? TimeOfDay(hour: 12, minute: 0),
                               primaryButtonText: 'Select',
                             );
 
@@ -350,7 +350,7 @@ class AddTaskScreen extends ConsumerWidget {
                               context,
                               initialTime:
                                   notifier.selectedReminderTime ??
-                                  TimeOfDay.now(),
+                                  TimeOfDay(hour: 12, minute: 0),
                               primaryButtonText: 'Select',
                             );
 
