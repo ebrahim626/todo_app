@@ -252,13 +252,17 @@ class HomeScreen extends ConsumerWidget {
                                         color: Colors.white,
                                       ),
                                     ),
-                                    4.ph,
-                                    Text(
-                                      "${task?.description}",
-                                      style: context.text.bodySmall?.copyWith(
-                                        color: Colors.white,
+                                    if (task?.description != null && task?.description != "")... [
+                                      4.ph,
+                                      Text(
+                                        "${task?.description}",
+                                        style: context.text.bodySmall?.copyWith(
+                                          color: Colors.white,
+                                        ),
+                                        maxLines: 2,
                                       ),
-                                    ),
+                                    ],
+                                    4.ph,
                                     Row(
                                       children: [
                                         Spacer(),
