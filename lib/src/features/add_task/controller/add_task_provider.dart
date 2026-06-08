@@ -10,13 +10,14 @@ import 'package:todo_app/src/features/add_task/repository/add_task_repository.da
 import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/shared/toast/toast.dart';
 
+import '../../home/get_task_model/response/get_task_model.dart';
+
 typedef AddTaskNotifier =
-    AutoDisposeAsyncNotifierProvider<AddTaskProvider, void>;
+    AutoDisposeAsyncNotifierProviderFamily<AddTaskProvider, void, TodoModel?>;
 
 final addTaskProvider = AddTaskNotifier(AddTaskProvider.new);
 
-class AddTaskProvider extends AutoDisposeAsyncNotifier {
-
+class AddTaskProvider extends AutoDisposeFamilyAsyncNotifier<void, TodoModel?> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DateTime? selectedDueDate;
   DateTime? selectedReminderDate;
@@ -49,11 +50,7 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
     'Other',
   ];
 
-  List<String> taskPriorities = [
-    'Must Do',
-    'Should Do',
-    'Can Wait',
-  ];
+  List<String> taskPriorities = ['Must Do', 'Should Do', 'Can Wait'];
 
   String? selectedTaskType;
   String? selectedTaskPriority;
@@ -63,7 +60,25 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
   TextEditingController taskDescriptionController = TextEditingController();
 
   @override
-  FutureOr<dynamic> build() {}
+  FutureOr<dynamic> build(TodoModel? arg) {
+    if (arg != null) {
+      taskTitleController.text = arg.title;
+      taskDescriptionController.text = arg.description;
+      selectedTaskType = arg.taskType;
+      selectedTaskPriority = TaskPriority.getLabel(arg.taskPriority);
+      selectedDueDate = arg.dueDate;
+      selectedReminderDate = arg.reminderDate;
+      if (selectedDueDate != null) {
+        selectedDueTime =
+            TimeOfDay(hour: selectedDueDate!.hour, minute: selectedDueDate!.minute);
+      }
+      if (selectedReminderDate != null) {
+        selectedReminderTime = TimeOfDay(
+            hour: selectedReminderDate!.hour, minute: selectedReminderDate!.minute);
+      }
+    }
+
+  }
 
   void onDueDateChange(DateTime? date) {
     if (date != null) {
@@ -144,7 +159,7 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
   }
 
   Future<void> addTask(BuildContext context) async {
-    try{
+    try {
       if (!formKey.currentState!.validate()) {
         return;
       }
@@ -169,13 +184,13 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
 
       final repo = ref.read(addTaskRepository);
       CreateTaskRequest createTaskRequest = CreateTaskRequest(
-          title: taskTitleController.text,
-          taskStatus: 1,
-          taskPriority: TaskPriority.getValue(selectedTaskPriority ?? "") ?? 0,
-          taskType: selectedTaskType ?? "",
-          dueDate: selectedDueDate ?? DateTime.now(),
-          reminderDate: selectedReminderDate ?? DateTime.now(),
-          description: taskDescriptionController.text,
+        title: taskTitleController.text,
+        taskStatus: 1,
+        taskPriority: TaskPriority.getValue(selectedTaskPriority ?? "") ?? 0,
+        taskType: selectedTaskType ?? "",
+        dueDate: selectedDueDate ?? DateTime.now(),
+        reminderDate: selectedReminderDate ?? DateTime.now(),
+        description: taskDescriptionController.text,
       );
       final response = await repo.addTask(createTaskModel: createTaskRequest);
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -188,14 +203,11 @@ class AddTaskProvider extends AutoDisposeAsyncNotifier {
           errorMessage: "Failed to add task: ${response.data["message"]}",
         );
       }
-
-    } catch(e){
+    } catch (e) {
       log("Error adding task: $e");
-    }
-    finally {
+    } finally {
       EasyLoading.dismiss();
       ref.notifyListeners();
     }
   }
-
 }

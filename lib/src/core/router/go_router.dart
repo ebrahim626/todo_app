@@ -34,7 +34,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.addTaskRoute,
         name: AddTaskScreen.name,
-        builder: (_, __) => const AddTaskScreen(),
+        builder: (context, state) =>  AddTaskScreen(task: state.extra as TodoModel?),
       ),
 
 

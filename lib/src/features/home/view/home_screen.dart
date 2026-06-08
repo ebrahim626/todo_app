@@ -221,6 +221,7 @@ class HomeScreen extends ConsumerWidget {
                                             ).then((value) {
                                               if (value == 'edit') {
                                                 // handle edit
+                                                context.push(AppRoutes.addTaskRoute, extra: task);
                                               } else if (value == 'reschedule') {
                                                 // handle reschedule
                                               } else if (value ==

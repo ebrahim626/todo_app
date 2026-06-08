@@ -11,17 +11,19 @@ import 'package:todo_app/src/features/common/view/text_field/custom_textfield_wi
 import '../../../core/utils/extensions/context.dart';
 import '../../common/view/platform/platform_date_picker.dart';
 import '../../common/view/platform/show_time_picker.dart';
+import '../../home/get_task_model/response/get_task_model.dart';
 
 class AddTaskScreen extends ConsumerWidget {
-  const AddTaskScreen({super.key});
+  const AddTaskScreen({super.key, this.task});
 
   static const String name = "add-task";
+  final TodoModel? task;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    ref.watch(addTaskProvider);
-    final notifier = ref.read(addTaskProvider.notifier);
+    ref.watch(addTaskProvider(task));
+    final notifier = ref.read(addTaskProvider(task).notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +37,7 @@ class AddTaskScreen extends ConsumerWidget {
 
         centerTitle: true,
         title: Text(
-          "Add Todo Task",
+          task == null ? "Add Todo Task" : "Edit Todo Task",
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
             color: textColor,
@@ -378,9 +380,9 @@ class AddTaskScreen extends ConsumerWidget {
               ),
               Spacer(),
               AppButton(
-                  text: "Add Task",
+                  text: "Update Task",
                   onTap: () {
-                    notifier.addTask(context);
+                    task == null ?  notifier.addTask(context) : () {};
                   }
               ),
             ],
