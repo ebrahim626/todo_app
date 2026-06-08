@@ -22,7 +22,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
   Map<DateTime, List<Color>> _buildTaskColorMap() {
     final Map<DateTime, List<Color>> colorMap = {};
 
-    for (final task in widget.notifier.todoTasks ?? []) {
+    for (final task in widget.notifier.allTodoTasks ?? []) {
       if (task.dueDate == null) continue;
 
       final key = DateTime(
@@ -176,6 +176,8 @@ class _HomeCalendarState extends State<HomeCalendar> {
           _focusedDay = focusedDay;
         });
         widget.notifier.getTasks(date: focusedDay);
+        widget.notifier.selectedDate = selectedDay;
+
       },
       calendarFormat: CalendarFormat.month,
       availableCalendarFormats: const {CalendarFormat.month: 'Month'},

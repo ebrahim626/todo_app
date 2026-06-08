@@ -6,6 +6,11 @@ class DateFormatter {
     return DateFormat('MMM dd, yyyy').format(date);
   }
 
+  // Format: Monday, 25 May 2026
+  static String formatDateWithDay(DateTime date) {
+    return DateFormat('EEEE, dd MMM yyyy').format(date);
+  }
+
   // Optional: If you need to parse from string
   static DateTime? parseDate(String dateString) {
     try {

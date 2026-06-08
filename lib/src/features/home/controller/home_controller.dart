@@ -20,6 +20,8 @@ final homeControllerProvider = HomeControllerProvider(HomeController.new);
 class HomeController extends AutoDisposeAsyncNotifier {
 
   List<TodoModel>? todoTasks;
+  List<TodoModel>? allTodoTasks;
+  DateTime selectedDate = DateTime.now();
 
   @override
   FutureOr<dynamic> build() async {
@@ -60,6 +62,15 @@ class HomeController extends AutoDisposeAsyncNotifier {
 
       ///"reminderDate": "2026-06-03T14:52:12.312Z",
       final response = await repoData.getAllTasks(date: date?.toUtc().toIso8601String() ?? DateTime.now().toUtc().toIso8601String());
+
+      final allResponse = await repoData.getAllTasks();
+
+      if(allResponse.statusCode == 200){
+        final allData = TodoListResponse.fromJson(allResponse.data);
+        allTodoTasks = allData.data.data;
+      } else {
+        FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
+      }
 
       if ( response.statusCode == 200 ) {
         // Handle successful response

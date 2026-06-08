@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/src/core/router/app_routers.dart';
+import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/service/time_formatter.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import 'package:todo_app/src/features/home/view/components/task_priority.dart';
@@ -102,7 +103,8 @@ class HomeScreen extends ConsumerWidget {
                           const AppDivider(height: 1, thickness: 1),
                           12.ph,
                           Text(
-                            "Monday, 25 May 2026",
+                            // "Monday, 25 May 2026"
+                            "${DateFormatter.formatDateWithDay(notifier.selectedDate)}",
                             style: context.text.titleMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
