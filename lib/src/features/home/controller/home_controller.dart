@@ -47,18 +47,19 @@ class HomeController extends AutoDisposeAsyncNotifier {
     context.push(AppRoutes.splashScreenRoute);
   }
 
-  Future<void> refresh() async {
-    await getTasks();
+  Future<void> refresh({DateTime? date}) async {
+    await getTasks(date: date);
   }
 
-  FutureOr<void> getTasks() async {
+  FutureOr<void> getTasks({DateTime? date}) async {
     try{
       EasyLoading.show();
       ref.notifyListeners();
 
       final repoData = ref.read(homeRepository);
 
-      final response = await repoData.getAllTasks();
+      ///"reminderDate": "2026-06-03T14:52:12.312Z",
+      final response = await repoData.getAllTasks(date: date?.toUtc().toIso8601String() ?? DateTime.now().toUtc().toIso8601String());
 
       if ( response.statusCode == 200 ) {
         // Handle successful response

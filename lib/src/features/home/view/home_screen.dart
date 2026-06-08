@@ -93,7 +93,7 @@ class HomeScreen extends ConsumerWidget {
                       toolbarHeight: 0,
                       elevation: 0,
                       shadowColor: Colors.transparent,
-                      flexibleSpace: FlexibleSpaceBar(background: HomeCalendar()),
+                      flexibleSpace: FlexibleSpaceBar(background: HomeCalendar(notifier: notifier)),
                     ),
                     SliverToBoxAdapter(
                       child: Column(

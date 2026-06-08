@@ -4,8 +4,12 @@ import 'package:todo_app/src/core/utils/extensions/gap.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import 'package:todo_app/src/features/common/view/divider/app_divider.dart';
 
+import '../../controller/home_controller.dart';
+
 class HomeCalendar extends StatefulWidget {
-  const HomeCalendar({super.key});
+  const HomeCalendar({super.key, required this.notifier});
+
+  final HomeController notifier;
 
   @override
   State<HomeCalendar> createState() => _HomeCalendarState();
@@ -15,16 +19,36 @@ class _HomeCalendarState extends State<HomeCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay = DateTime.now();
 
-  // Map date to multiple colors
-  final Map<DateTime, List<Color>> _taskColorMap = {
-    DateTime(2026, 6, 3): [Colors.teal, Colors.red, Colors.grey],
-    DateTime(2026, 6, 4): [Colors.orange, Colors.red],
-    DateTime(2026, 6, 8): [Colors.red, Colors.teal],
-  };
+  Map<DateTime, List<Color>> _buildTaskColorMap() {
+    final Map<DateTime, List<Color>> colorMap = {};
+
+    for (final task in widget.notifier.todoTasks ?? []) {
+      if (task.dueDate == null) continue;
+
+      final key = DateTime(
+        task.dueDate!.year,
+        task.dueDate!.month,
+        task.dueDate!.day,
+      );
+
+      final color = widget.notifier.getStatusColor(task.taskStatus ?? 1);
+
+      if (colorMap.containsKey(key)) {
+        colorMap[key]!.add(color);
+      } else {
+        colorMap[key] = [color];
+      }
+    }
+
+    return colorMap;
+  }
+
+// Remove the hardcoded _taskColorMap field entirely
 
   List<Color> _getColorsForDay(DateTime day) {
+    final map = _buildTaskColorMap();         // built fresh from live data
     final key = DateTime(day.year, day.month, day.day);
-    return _taskColorMap[key] ?? [];
+    return map[key] ?? [];
   }
 
   String _monthName(int month) {
@@ -151,6 +175,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
           _selectedDay = selectedDay;
           _focusedDay = focusedDay;
         });
+        widget.notifier.getTasks(date: focusedDay);
       },
       calendarFormat: CalendarFormat.month,
       availableCalendarFormats: const {CalendarFormat.month: 'Month'},
@@ -268,3 +293,4 @@ class _HomeCalendarState extends State<HomeCalendar> {
     );
   }
 }
+

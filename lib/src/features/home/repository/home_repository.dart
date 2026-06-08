@@ -10,11 +10,14 @@ class HomeRepository {
 
   final ApiClient apiClient;
 
-  Future<ApiResponse<dynamic>> getAllTasks() async {
+  Future<ApiResponse<dynamic>> getAllTasks({String? date}) async {
     return await apiClient.get(
       apiType: APIType.private,
       tokenType: TokenType.bearerToken,
       path: ApiEndpoints.getAllTasksEndpoint,
+      query: {
+          'DueDateFrom': date,
+      },
     );
   }
 
