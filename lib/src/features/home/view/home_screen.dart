@@ -332,7 +332,7 @@ class HomeScreen extends ConsumerWidget {
                                             children: [
                                               Spacer(),
                                               Text(
-                                                "Due: ${DateTimeFormatter.time(task.dueDate)}",
+                                                "Due Time: ${DateTimeFormatter.time(task.dueDate)}",
                                                 style: context.text.bodySmall
                                                     ?.copyWith(
                                                       color: Colors.white,

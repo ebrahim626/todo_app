@@ -1,3 +1,5 @@
+import 'package:todo_app/src/core/service/local_time_formatter.dart';
+
 class CreateTaskRequest {
   final String title;
   final int taskStatus;
@@ -22,8 +24,8 @@ class CreateTaskRequest {
     'taskStatus': taskStatus,
     'taskPriority': taskPriority,
     'taskType': taskType,
-    'dueDate': dueDate.toUtc().toIso8601String(),
-    'reminderDate': reminderDate.toUtc().toIso8601String(),
+    'dueDate': LocalTimeFormatter.toUtcIso(dueDate),           // ✅ keeps time
+    'reminderDate': LocalTimeFormatter.toUtcIso(reminderDate), // ✅ keeps time
     'description': description,
   };
 }

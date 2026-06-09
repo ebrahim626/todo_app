@@ -63,10 +63,12 @@ class HomeController extends AutoDisposeAsyncNotifier {
     for (final task in allTodoTasks ?? []) {
       if (task.dueDate == null) continue;
 
+      final localDate = task.dueDate!.toLocal();
+
       final key = DateTime(
-        task.dueDate!.year,
-        task.dueDate!.month,
-        task.dueDate!.day,
+        localDate.year,
+        localDate.month,
+        localDate.day,
       );
 
       final color = getStatusColor(task.taskStatus ?? 1);
@@ -103,13 +105,14 @@ class HomeController extends AutoDisposeAsyncNotifier {
 
   Future<void> getTasks({DateTime? date, bool isFirstLoad = true}) async {
     try{
+      ref.notifyListeners();
       isFirstLoad == false ?
       EasyLoading.show() : null;
 
       final repoData = ref.read(homeRepository);
 
       ///"reminderDate": "2026-06-03T14:52:12.312Z",
-      final response = await repoData.getAllTasks(date: date?.toUtc().toIso8601String() ?? DateTime.now().toUtc().toIso8601String());
+      final response = await repoData.getAllTasks(date: date ?? DateTime.now());
 
       if ( response.statusCode == 200 ) {
         // Handle successful response
@@ -140,6 +143,7 @@ class HomeController extends AutoDisposeAsyncNotifier {
       if(allResponse.statusCode == 200){
         final allData = TodoListResponse.fromJson(allResponse.data);
         allTodoTasks = allData.data.data;
+        log("tasks all : $allTodoTasks ");
       } else {
         FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
       }
@@ -147,6 +151,8 @@ class HomeController extends AutoDisposeAsyncNotifier {
     }catch(e){
       log("Error fetching tasks: $e");
       FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");
+    }finally {
+      ref.notifyListeners();
     }
   }
 

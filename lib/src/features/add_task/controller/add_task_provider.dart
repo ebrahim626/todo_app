@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/src/features/history/controller/history_provider.dart';
 import 'package:todo_app/src/features/home/view/components/task_priority.dart';
 import 'package:todo_app/src/features/add_task/model/request/create_task_request_model.dart';
 import 'package:todo_app/src/features/add_task/repository/add_task_repository.dart';
@@ -196,6 +197,8 @@ class AddTaskProvider extends AutoDisposeFamilyAsyncNotifier<void, TodoModel?> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         FlashCard.showSuccess(message: "Task ${isUpdate ? "updated" : "added"} successfully");
         ref.invalidate(homeControllerProvider);
+        ref.invalidate(historyProvider);
+        ref.notifyListeners();
         context.pop();
       } else {
         log("Error ${isUpdate ? "updating" : "adding"} task: ${response.data}");
@@ -207,7 +210,6 @@ class AddTaskProvider extends AutoDisposeFamilyAsyncNotifier<void, TodoModel?> {
       log("Error adding task: $e");
     } finally {
       EasyLoading.dismiss();
-      ref.notifyListeners();
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,7 +43,7 @@ class HistoryProvider extends AutoDisposeAsyncNotifier {
 
       final repoData = ref.read(homeRepository);
 
-      final allResponse = await repoData.getAllTasks();
+      final allResponse = await repoData.getAllTasks(isHistory: true);
 
       if(allResponse.statusCode == 200){
         final allData = TodoListResponse.fromJson(allResponse.data);

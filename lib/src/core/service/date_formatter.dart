@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 class DateFormatter {
   // Format: Feb 02, 2024
   static String formatDate(DateTime date) {
-    return DateFormat('MMM dd, yyyy').format(date);
+    return DateFormat('dd MMM, yyyy').format(date);
   }
 
   // Format: Monday, 25 May 2026

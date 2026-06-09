@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
 import 'package:todo_app/src/features/common/view/divider/app_divider.dart';
 import 'package:todo_app/src/features/history/controller/history_provider.dart';
 
+import '../../../core/router/app_routers.dart';
 import '../../../core/service/time_formatter.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../../core/utils/theme/theme.dart';
@@ -247,6 +250,10 @@ class HistoryScreen extends ConsumerWidget {
                                             ).then((value) {
                                               if (value == 'edit') {
                                                 // handle edit
+                                                context.push(
+                                                  AppRoutes.addTaskRoute,
+                                                  extra: task,
+                                                );
                                               } else if (value == 'reschedule') {
                                                 // handle reschedule
                                               } else if (value == 'change_status') {
@@ -293,9 +300,15 @@ class HistoryScreen extends ConsumerWidget {
                                     4.ph,
                                     Row(
                                       children: [
+                                        Text(
+                                          "${DateFormatter.formatDate(task?.dueDate ?? DateTime.now())}",
+                                          style: context.text.bodySmall?.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                         Spacer(),
                                         Text(
-                                          "Due: ${DateTimeFormatter.time(task?.dueDate)}",
+                                          "Time: ${DateTimeFormatter.time(task?.dueDate)}",
                                           style: context.text.bodySmall?.copyWith(
                                             color: Colors.white,
                                           ),
