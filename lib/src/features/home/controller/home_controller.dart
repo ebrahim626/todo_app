@@ -77,11 +77,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
     return taskColorMap[key] ?? [];
   }
 
-// Add this to call after add/edit API success
-  void resetCalendarSelection() {
-    selectedDate = DateTime.now();
-    getTasks(date: DateTime.now());
-  }
 
   Future<void> logOut(BuildContext context) async {
     ref.watch(cacheServiceProvider);
@@ -90,8 +85,8 @@ class HomeController extends AutoDisposeAsyncNotifier {
   }
 
   Future<void> refresh({DateTime? date}) async {
-    await getTasks(date: date);
-    resetCalendarSelection();
+    selectedDate = DateTime.now();
+    getTasks(date: DateTime.now());
   }
 
   FutureOr<void> getTasks({DateTime? date}) async {

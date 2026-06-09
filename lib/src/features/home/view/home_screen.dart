@@ -94,7 +94,12 @@ class HomeScreen extends ConsumerWidget {
                       toolbarHeight: 0,
                       elevation: 0,
                       shadowColor: Colors.transparent,
-                      flexibleSpace: FlexibleSpaceBar(background: HomeCalendar(notifier: notifier)),
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: HomeCalendar(
+                          notifier: notifier,
+                          selectedDay: notifier.selectedDate,
+                        ),
+                      ),
                     ),
                     SliverToBoxAdapter(
                       child: Column(
@@ -112,226 +117,254 @@ class HomeScreen extends ConsumerWidget {
                           12.ph,
                           tasks == null || tasks.isEmpty
                               ? Container(
-                            height: 180,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: primaryColor,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "No tasks for this day.",
-                                  style: context.text.bodyLarge?.copyWith(
-                                    color: Colors.white,
+                                  height: 180,
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: primaryColor,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                6.ph,
-                                Text(
-                                  "Dates with tasks will display colored dots below them, indicating the status of the tasks for that day.",
-                                  style: context.text.labelSmall?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          )
-                              : ListView.separated(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: tasks.length,
-                            separatorBuilder: (BuildContext context, int index) {
-                              return 10.ph;
-                            },
-                            itemBuilder: (context, index) {
-                              final task = tasks[index];
-                              return Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: notifier.getStatusColor(task.taskStatus),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        CardStatusWidget(
-                                          statusTitle: "${task.taskType}",
-                                        ),
-                                        8.pw,
-                                        CardStatusWidget(statusTitle: "${TaskPriority.getLabel(task.taskPriority)}"),
-                                        8.pw,
-                                        CardStatusWidget(statusTitle: "${TaskStatus.getLabel(task.taskStatus)}"),
-                                        Spacer(),
-                                        GestureDetector(
-                                          onTapDown: (TapDownDetails details) {
-                                            final RenderBox overlay =
-                                                Overlay.of(
-                                                      context,
-                                                    ).context.findRenderObject()
-                                                    as RenderBox;
-                                            showMenu(
-                                              context: context,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadiusGeometry.circular(
-                                                      12,
-                                                    ),
-                                              ),
-                                              color: const Color(
-                                                0xffEEFAFF,
-                                              ), // menu background color
-                                              position: RelativeRect.fromRect(
-                                                details.globalPosition &
-                                                    const Size(40, 40),
-                                                Offset.zero & overlay.size,
-                                              ),
-                                              items: [
-                                                PopupMenuItem<String>(
-                                                  value: 'edit',
-                                                  height: 40,
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 12,
-                                                        ),
-                                                    title: Text("Edit"),
-                                                  ),
-                                                ),
-                                                PopupMenuItem<String>(
-                                                  value: 'reschedule',
-                                                  height: 40,
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 12,
-                                                        ),
-                                                    title: Text("Reschedule"),
-                                                  ),
-                                                ),
-                                                PopupMenuItem<String>(
-                                                  value: 'change_status',
-                                                  height: 40,
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 12,
-                                                        ),
-                                                    title: Text("Change Status"),
-                                                  ),
-                                                ),
-                                                PopupMenuItem<String>(
-                                                  value: 'delete',
-                                                  height: 40,
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 12,
-                                                        ),
-                                                    title: Text(
-                                                      "Delete",
-                                                      style: TextStyle(
-                                                        color: Colors.red,
-                                                      ), // 👈 red delete
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ).then((value) {
-                                              if (value == 'edit') {
-                                                // handle edit
-                                                context.push(AppRoutes.addTaskRoute, extra: task);
-                                              } else if (value == 'reschedule') {
-                                                // handle reschedule
-                                              } else if (value ==
-                                                  'change_status') {
-                                                // handle change status
-                                              } else if (value == 'delete') {
-                                                // handle delete
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(
-                                                99,
-                                              ),
-                                              color: Colors.white,
-                                            ),
-                                            child: Icon(
-                                              Icons.more_vert,
-                                              size: 18,
-                                              color: notifier.getStatusColor(task.taskStatus),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "${task.title}",
-                                      style: context.text.titleSmall?.copyWith(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (task.description != "")... [
-                                      4.ph,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
                                       Text(
-                                        "${task.description}",
-                                        style: context.text.bodySmall?.copyWith(
+                                        "No tasks for this day.",
+                                        style: context.text.bodyLarge?.copyWith(
                                           color: Colors.white,
                                         ),
-                                        maxLines: 2,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      6.ph,
+                                      Text(
+                                        "Dates with tasks will display colored dots below them, indicating the status of the tasks for that day.",
+                                        style: context.text.labelSmall
+                                            ?.copyWith(color: Colors.white),
+                                        textAlign: TextAlign.center,
                                       ),
                                     ],
-                                    4.ph,
-                                    Row(
-                                      children: [
-                                        Spacer(),
-                                        Text(
-                                          "Due: ${DateTimeFormatter.time(task.dueDate)}",
-                                          style: context.text.bodySmall?.copyWith(
-                                            color: Colors.white,
-                                          ),
+                                  ),
+                                )
+                              : ListView.separated(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: tasks.length,
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                        return 10.ph;
+                                      },
+                                  itemBuilder: (context, index) {
+                                    final task = tasks[index];
+                                    return Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: notifier.getStatusColor(
+                                          task.taskStatus,
                                         ),
-                                        // Spacer(),
-                                        // Container(
-                                        //   padding: EdgeInsets.symmetric(
-                                        //     horizontal: 8,
-                                        //     vertical: 4,
-                                        //   ),
-                                        //   decoration: BoxDecoration(
-                                        //     borderRadius:
-                                        //         BorderRadius.circular(8),
-                                        //     color: Colors.white,
-                                        //   ),
-                                        //   child: Text(
-                                        //     "View Details",
-                                        //     style:
-                                        //         context.text.bodySmall?.copyWith(
-                                        //       color: primaryColor,
-                                        //       fontWeight: FontWeight.w500,
-                                        //     ),
-                                        //   ),
-                                        // )
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CardStatusWidget(
+                                                statusTitle: "${task.taskType}",
+                                              ),
+                                              8.pw,
+                                              CardStatusWidget(
+                                                statusTitle:
+                                                    "${TaskPriority.getLabel(task.taskPriority)}",
+                                              ),
+                                              8.pw,
+                                              CardStatusWidget(
+                                                statusTitle:
+                                                    "${TaskStatus.getLabel(task.taskStatus)}",
+                                              ),
+                                              Spacer(),
+                                              GestureDetector(
+                                                onTapDown: (TapDownDetails details) {
+                                                  final RenderBox overlay =
+                                                      Overlay.of(context)
+                                                              .context
+                                                              .findRenderObject()
+                                                          as RenderBox;
+                                                  showMenu(
+                                                    context: context,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadiusGeometry.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                    color: const Color(
+                                                      0xffEEFAFF,
+                                                    ), // menu background color
+                                                    position:
+                                                        RelativeRect.fromRect(
+                                                          details.globalPosition &
+                                                              const Size(
+                                                                40,
+                                                                40,
+                                                              ),
+                                                          Offset.zero &
+                                                              overlay.size,
+                                                        ),
+                                                    items: [
+                                                      PopupMenuItem<String>(
+                                                        value: 'edit',
+                                                        height: 40,
+                                                        child: ListTile(
+                                                          dense: true,
+                                                          contentPadding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal: 12,
+                                                              ),
+                                                          title: Text("Edit"),
+                                                        ),
+                                                      ),
+                                                      PopupMenuItem<String>(
+                                                        value: 'reschedule',
+                                                        height: 40,
+                                                        child: ListTile(
+                                                          dense: true,
+                                                          contentPadding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal: 12,
+                                                              ),
+                                                          title: Text(
+                                                            "Reschedule",
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      PopupMenuItem<String>(
+                                                        value: 'change_status',
+                                                        height: 40,
+                                                        child: ListTile(
+                                                          dense: true,
+                                                          contentPadding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal: 12,
+                                                              ),
+                                                          title: Text(
+                                                            "Change Status",
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      PopupMenuItem<String>(
+                                                        value: 'delete',
+                                                        height: 40,
+                                                        child: ListTile(
+                                                          dense: true,
+                                                          contentPadding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal: 12,
+                                                              ),
+                                                          title: Text(
+                                                            "Delete",
+                                                            style: TextStyle(
+                                                              color: Colors.red,
+                                                            ), // 👈 red delete
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ).then((value) {
+                                                    if (value == 'edit') {
+                                                      // handle edit
+                                                      context.push(
+                                                        AppRoutes.addTaskRoute,
+                                                        extra: task,
+                                                      );
+                                                    } else if (value ==
+                                                        'reschedule') {
+                                                      // handle reschedule
+                                                    } else if (value ==
+                                                        'change_status') {
+                                                      // handle change status
+                                                    } else if (value ==
+                                                        'delete') {
+                                                      // handle delete
+                                                    }
+                                                  });
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          99,
+                                                        ),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.more_vert,
+                                                    size: 18,
+                                                    color: notifier
+                                                        .getStatusColor(
+                                                          task.taskStatus,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            "${task.title}",
+                                            style: context.text.titleSmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
+                                          if (task.description != "") ...[
+                                            4.ph,
+                                            Text(
+                                              "${task.description}",
+                                              style: context.text.bodySmall
+                                                  ?.copyWith(
+                                                    color: Colors.white,
+                                                  ),
+                                              maxLines: 2,
+                                            ),
+                                          ],
+                                          4.ph,
+                                          Row(
+                                            children: [
+                                              Spacer(),
+                                              Text(
+                                                "Due: ${DateTimeFormatter.time(task.dueDate)}",
+                                                style: context.text.bodySmall
+                                                    ?.copyWith(
+                                                      color: Colors.white,
+                                                    ),
+                                              ),
+                                              // Spacer(),
+                                              // Container(
+                                              //   padding: EdgeInsets.symmetric(
+                                              //     horizontal: 8,
+                                              //     vertical: 4,
+                                              //   ),
+                                              //   decoration: BoxDecoration(
+                                              //     borderRadius:
+                                              //         BorderRadius.circular(8),
+                                              //     color: Colors.white,
+                                              //   ),
+                                              //   child: Text(
+                                              //     "View Details",
+                                              //     style:
+                                              //         context.text.bodySmall?.copyWith(
+                                              //       color: primaryColor,
+                                              //       fontWeight: FontWeight.w500,
+                                              //     ),
+                                              //   ),
+                                              // )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
                           145.ph,
                         ],
                       ),

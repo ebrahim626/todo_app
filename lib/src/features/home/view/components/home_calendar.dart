@@ -6,9 +6,10 @@ import 'package:todo_app/src/features/common/view/divider/app_divider.dart';
 import '../../controller/home_controller.dart';
 
 class HomeCalendar extends StatefulWidget {
-  const HomeCalendar({super.key, required this.notifier});
+  const HomeCalendar({super.key, required this.notifier, this.selectedDay});
 
   final HomeController notifier;
+  final DateTime? selectedDay;
 
   @override
   State<HomeCalendar> createState() => _HomeCalendarState();
@@ -16,19 +17,8 @@ class HomeCalendar extends StatefulWidget {
 
 class _HomeCalendarState extends State<HomeCalendar> {
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay = DateTime.now();
 
   HomeController get _c => widget.notifier;
-
-
-
-  // ─── Reset (called externally after add/edit API) ───────────────────────────
-  void resetSelection() {
-    setState(() {
-      _selectedDay = DateTime.now();
-      _focusedDay = DateTime.now();
-    });
-  }
 
   // ─── Helpers ────────────────────────────────────────────────────────────────
   static String _monthName(int month) {
@@ -41,7 +31,6 @@ class _HomeCalendarState extends State<HomeCalendar> {
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
-      _selectedDay = selectedDay;
       _focusedDay = focusedDay;
     });
     _c.getTasks(date: focusedDay);
@@ -113,7 +102,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
       lastDay: DateTime.utc(2030, 12, 31),
       daysOfWeekHeight: 26,
       focusedDay: _focusedDay,
-      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+      selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
       onDaySelected: _onDaySelected,
       calendarFormat: CalendarFormat.month,
       availableCalendarFormats: const {CalendarFormat.month: 'Month'},
