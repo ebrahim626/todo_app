@@ -10,14 +10,16 @@ class HomeRepository {
 
   final ApiClient apiClient;
 
-  Future<ApiResponse<dynamic>> getAllTasks({String? date}) async {
+  Future<ApiResponse<dynamic>> getAllTasks({String? date, bool isHistory = false}) async {
     return await apiClient.get(
       apiType: APIType.private,
       tokenType: TokenType.bearerToken,
       path: ApiEndpoints.getAllTasksEndpoint,
-      query: date != null ? {
-        'DueDateFrom': date,
-        'DueDateTo': date} : null,
+      query:  {
+        if (date != null) 'DueDateFrom': date,
+        if (date != null) 'DueDateTo': date,
+        'History': isHistory,
+      },
     );
   }
 }

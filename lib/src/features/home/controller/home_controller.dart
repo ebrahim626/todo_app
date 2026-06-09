@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,8 +24,21 @@ class HomeController extends AutoDisposeAsyncNotifier {
 
   @override
   FutureOr<dynamic> build() async {
-    await getAllTasks();
-     await getTasks();
+    await initial();
+  }
+
+  Future<void> initial() async {
+   try{
+      EasyLoading.show();
+     await Future.wait([
+       getAllTasks(),
+       getTasks(),
+     ]);
+   }catch(e){
+      log("Error during initial data fetch: $e");
+   }finally{
+     EasyLoading.dismiss();
+   }
   }
 
   Color getStatusColor(int status) {
@@ -86,13 +98,13 @@ class HomeController extends AutoDisposeAsyncNotifier {
 
   Future<void> refresh({DateTime? date}) async {
     selectedDate = DateTime.now();
-    getTasks(date: DateTime.now());
+    await initial();
   }
 
-  FutureOr<void> getTasks({DateTime? date}) async {
+  Future<void> getTasks({DateTime? date, bool isFirstLoad = true}) async {
     try{
-      EasyLoading.show();
-      ref.notifyListeners();
+      isFirstLoad == false ?
+      EasyLoading.show() : null;
 
       final repoData = ref.read(homeRepository);
 
@@ -113,16 +125,14 @@ class HomeController extends AutoDisposeAsyncNotifier {
       FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");
     }
     finally {
-      EasyLoading.dismiss();
+      isFirstLoad == false ?
+      EasyLoading.dismiss() : null;
       ref.notifyListeners();
     }
   }
 
-  FutureOr<void> getAllTasks() async {
+  Future<void> getAllTasks() async {
     try{
-      EasyLoading.show();
-      ref.notifyListeners();
-
       final repoData = ref.read(homeRepository);
 
       final allResponse = await repoData.getAllTasks();
@@ -137,10 +147,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
     }catch(e){
       log("Error fetching tasks: $e");
       FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");
-    }
-    finally {
-      EasyLoading.dismiss();
-      ref.notifyListeners();
     }
   }
 

@@ -33,7 +33,7 @@ class _HomeCalendarState extends State<HomeCalendar> {
     setState(() {
       _focusedDay = focusedDay;
     });
-    _c.getTasks(date: focusedDay);
+    _c.getTasks(date: focusedDay, isFirstLoad: false);
     _c.selectedDate = selectedDay;
   }
 
