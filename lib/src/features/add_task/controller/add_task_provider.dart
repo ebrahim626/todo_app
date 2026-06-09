@@ -158,7 +158,7 @@ class AddTaskProvider extends AutoDisposeFamilyAsyncNotifier<void, TodoModel?> {
     }
   }
 
-  Future<void> addTask(BuildContext context) async {
+  Future<void> addTask(BuildContext context, {required bool isUpdate}) async {
     try {
       if (!formKey.currentState!.validate()) {
         return;
@@ -185,22 +185,22 @@ class AddTaskProvider extends AutoDisposeFamilyAsyncNotifier<void, TodoModel?> {
       final repo = ref.read(addTaskRepository);
       CreateTaskRequest createTaskRequest = CreateTaskRequest(
         title: taskTitleController.text,
-        taskStatus: 1,
+        taskStatus: isUpdate ? arg?.taskStatus ?? 4 : 4, // Default to "Upcoming"
         taskPriority: TaskPriority.getValue(selectedTaskPriority ?? "") ?? 0,
         taskType: selectedTaskType ?? "",
         dueDate: selectedDueDate ?? DateTime.now(),
         reminderDate: selectedReminderDate ?? DateTime.now(),
         description: taskDescriptionController.text,
       );
-      final response = await repo.addTask(createTaskModel: createTaskRequest);
+      final response = isUpdate ? await repo.updateTask(createTaskModel: createTaskRequest, taskId: arg?.id ?? 0) : await repo.addTask(createTaskModel: createTaskRequest);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        FlashCard.showSuccess(message: "Task added successfully");
+        FlashCard.showSuccess(message: "Task ${isUpdate ? "updated" : "added"} successfully");
         ref.invalidate(homeControllerProvider);
         context.pop();
       } else {
-        log("Error adding task: ${response.data}");
+        log("Error ${isUpdate ? "updating" : "adding"} task: ${response.data}");
         FlashCard.showError(
-          errorMessage: "Failed to add task: ${response.data["message"]}",
+          errorMessage: "Failed to ${isUpdate ? "update" : "add"}add task: ${response.data["message"]}",
         );
       }
     } catch (e) {

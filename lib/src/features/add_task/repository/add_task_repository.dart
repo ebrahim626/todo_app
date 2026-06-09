@@ -21,4 +21,18 @@ class AddTaskRepository {
       data: createTaskModel.toJson(),
     );
   }
+
+  Future<ApiResponse<dynamic>> updateTask({
+    required CreateTaskRequest createTaskModel,
+    required int taskId,
+  }) async {
+    return await apiClient.patch(
+      apiType: APIType.private,
+      tokenType: TokenType.bearerToken,
+      path: ApiEndpoints.editTaskEndPoint(slotId: taskId),
+      data: createTaskModel.toJson(),
+
+    );
+  }
+
 }

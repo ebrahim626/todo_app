@@ -224,7 +224,8 @@ class AddTaskScreen extends ConsumerWidget {
                             final selectedTime = await PlatformTimePicker.show(
                               context,
                               initialTime:
-                                  notifier.selectedDueTime ?? TimeOfDay(hour: 12, minute: 0),
+                                  notifier.selectedDueTime ??
+                                  TimeOfDay(hour: 12, minute: 0),
                               primaryButtonText: 'Select',
                             );
 
@@ -380,10 +381,12 @@ class AddTaskScreen extends ConsumerWidget {
               ),
               Spacer(),
               AppButton(
-                  text: "Update Task",
-                  onTap: () {
-                    task == null ?  notifier.addTask(context) : () {};
-                  }
+                text: "Update Task",
+                onTap: () {
+                  task == null
+                      ? notifier.addTask(context, isUpdate: false)
+                      : notifier.addTask(context, isUpdate: true);
+                },
               ),
             ],
           ),

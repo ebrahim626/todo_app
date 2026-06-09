@@ -7,6 +7,7 @@ class ApiEndpoints {
 
   static const String googleSignInEndpoint = '/api/user/google-login';
   static const String getAllTasksEndpoint = '/api/todo';
-
+  static String editTaskEndPoint({required int slotId}) =>
+      "$getAllTasksEndpoint/$slotId";
 
 }

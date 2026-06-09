@@ -25,6 +25,7 @@ class HomeController extends AutoDisposeAsyncNotifier {
 
   @override
   FutureOr<dynamic> build() async {
+    await getAllTasks();
      await getTasks();
   }
 
@@ -43,6 +44,45 @@ class HomeController extends AutoDisposeAsyncNotifier {
     }
   }
 
+  // Add this getter to build the color map
+  Map<DateTime, List<Color>> get taskColorMap {
+    final Map<DateTime, List<Color>> colorMap = {};
+
+    for (final task in allTodoTasks ?? []) {
+      if (task.dueDate == null) continue;
+
+      final key = DateTime(
+        task.dueDate!.year,
+        task.dueDate!.month,
+        task.dueDate!.day,
+      );
+
+      final color = getStatusColor(task.taskStatus ?? 1);
+
+      if (colorMap.containsKey(key)) {
+        if (!colorMap[key]!.contains(color)) {
+          colorMap[key]!.add(color);
+        }
+      } else {
+        colorMap[key] = [color];
+      }
+    }
+
+    return colorMap;
+  }
+
+// Add this helper
+  List<Color> getColorsForDay(DateTime day) {
+    final key = DateTime(day.year, day.month, day.day);
+    return taskColorMap[key] ?? [];
+  }
+
+// Add this to call after add/edit API success
+  void resetCalendarSelection() {
+    selectedDate = DateTime.now();
+    getTasks(date: DateTime.now());
+  }
+
   Future<void> logOut(BuildContext context) async {
     ref.watch(cacheServiceProvider);
     await ref.read(cacheServiceProvider).clearAuthTokens();
@@ -51,6 +91,7 @@ class HomeController extends AutoDisposeAsyncNotifier {
 
   Future<void> refresh({DateTime? date}) async {
     await getTasks(date: date);
+    resetCalendarSelection();
   }
 
   FutureOr<void> getTasks({DateTime? date}) async {
@@ -63,15 +104,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
       ///"reminderDate": "2026-06-03T14:52:12.312Z",
       final response = await repoData.getAllTasks(date: date?.toUtc().toIso8601String() ?? DateTime.now().toUtc().toIso8601String());
 
-      final allResponse = await repoData.getAllTasks();
-
-      if(allResponse.statusCode == 200){
-        final allData = TodoListResponse.fromJson(allResponse.data);
-        allTodoTasks = allData.data.data;
-      } else {
-        FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
-      }
-
       if ( response.statusCode == 200 ) {
         // Handle successful response
         final  data = TodoListResponse.fromJson(response.data);
@@ -81,6 +113,32 @@ class HomeController extends AutoDisposeAsyncNotifier {
         // Handle non-successful response
       FlashCard.showError(errorMessage: "Failed to fetch tasks.");
       }
+    }catch(e){
+      log("Error fetching tasks: $e");
+      FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");
+    }
+    finally {
+      EasyLoading.dismiss();
+      ref.notifyListeners();
+    }
+  }
+
+  FutureOr<void> getAllTasks() async {
+    try{
+      EasyLoading.show();
+      ref.notifyListeners();
+
+      final repoData = ref.read(homeRepository);
+
+      final allResponse = await repoData.getAllTasks();
+
+      if(allResponse.statusCode == 200){
+        final allData = TodoListResponse.fromJson(allResponse.data);
+        allTodoTasks = allData.data.data;
+      } else {
+        FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
+      }
+
     }catch(e){
       log("Error fetching tasks: $e");
       FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");

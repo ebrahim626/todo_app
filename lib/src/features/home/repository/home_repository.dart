@@ -15,10 +15,9 @@ class HomeRepository {
       apiType: APIType.private,
       tokenType: TokenType.bearerToken,
       path: ApiEndpoints.getAllTasksEndpoint,
-      query: {
-          'DueDateFrom': date,
-      },
+      query: date != null ? {
+        'DueDateFrom': date,
+        'DueDateTo': date} : null,
     );
   }
-
 }

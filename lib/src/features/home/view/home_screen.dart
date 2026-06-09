@@ -110,22 +110,52 @@ class HomeScreen extends ConsumerWidget {
                             ),
                           ),
                           12.ph,
-                          ListView.separated(
+                          tasks == null || tasks.isEmpty
+                              ? Container(
+                            height: 180,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: primaryColor,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "No tasks for this day.",
+                                  style: context.text.bodyLarge?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                6.ph,
+                                Text(
+                                  "Dates with tasks will display colored dots below them, indicating the status of the tasks for that day.",
+                                  style: context.text.labelSmall?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          )
+                              : ListView.separated(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: tasks?.length ?? 0,
+                            itemCount: tasks.length,
                             separatorBuilder: (BuildContext context, int index) {
                               return 10.ph;
                             },
                             itemBuilder: (context, index) {
-                              final task = tasks?[index];
+                              final task = tasks[index];
                               return Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  color: notifier.getStatusColor(task?.taskStatus ?? 1),
+                                  color: notifier.getStatusColor(task.taskStatus),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,12 +163,12 @@ class HomeScreen extends ConsumerWidget {
                                     Row(
                                       children: [
                                         CardStatusWidget(
-                                          statusTitle: "${task?.taskType}",
+                                          statusTitle: "${task.taskType}",
                                         ),
                                         8.pw,
-                                        CardStatusWidget(statusTitle: "${TaskPriority.getLabel(task?.taskPriority ?? 1)}"),
+                                        CardStatusWidget(statusTitle: "${TaskPriority.getLabel(task.taskPriority)}"),
                                         8.pw,
-                                        CardStatusWidget(statusTitle: "${TaskStatus.getLabel(task?.taskStatus ?? 1)}"),
+                                        CardStatusWidget(statusTitle: "${TaskStatus.getLabel(task.taskStatus)}"),
                                         Spacer(),
                                         GestureDetector(
                                           onTapDown: (TapDownDetails details) {
@@ -243,22 +273,22 @@ class HomeScreen extends ConsumerWidget {
                                             child: Icon(
                                               Icons.more_vert,
                                               size: 18,
-                                              color: notifier.getStatusColor(task?.taskStatus ?? 1),
+                                              color: notifier.getStatusColor(task.taskStatus),
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
                                     Text(
-                                      "${task?.title}",
+                                      "${task.title}",
                                       style: context.text.titleSmall?.copyWith(
                                         color: Colors.white,
                                       ),
                                     ),
-                                    if (task?.description != null && task?.description != "")... [
+                                    if (task.description != "")... [
                                       4.ph,
                                       Text(
-                                        "${task?.description}",
+                                        "${task.description}",
                                         style: context.text.bodySmall?.copyWith(
                                           color: Colors.white,
                                         ),
@@ -270,7 +300,7 @@ class HomeScreen extends ConsumerWidget {
                                       children: [
                                         Spacer(),
                                         Text(
-                                          "Due: ${DateTimeFormatter.time(task?.dueDate)}",
+                                          "Due: ${DateTimeFormatter.time(task.dueDate)}",
                                           style: context.text.bodySmall?.copyWith(
                                             color: Colors.white,
                                           ),
