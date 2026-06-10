@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/src/core/network/api_client.export.dart';
 import 'package:todo_app/src/core/service/local_time_formatter.dart';
 
@@ -15,14 +16,15 @@ class HomeRepository {
     DateTime? date,
     bool isHistory = false,
   }) async {
-    final range = date != null ? LocalTimeFormatter.dayRangeUtc(date) : null;
+    final offset = DateTime.now().timeZoneOffset; // e.g. Duration(hours: 6) for BD
     return await apiClient.get(
       apiType: APIType.private,
       tokenType: TokenType.bearerToken,
       path: ApiEndpoints.getAllTasksEndpoint,
       query: {
-        if (range != null) 'DueDateFrom': range.from, // ✅ full UTC range
-        if (range != null) 'DueDateTo': range.to,
+        if (date != null) 'dueDateFrom': DateFormat("yyyy-MM-dd").format(date), // ✅ full UTC range
+        if (date != null) 'dueDateTo': DateFormat("yyyy-MM-dd").format(date),
+        'utcOffsetMinutes': offset.inMinutes.toString(), // ✅ "360"
         'History': isHistory,
         'pageSize' : 100
       },

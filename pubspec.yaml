@@ -50,6 +50,7 @@ dependencies:
   table_calendar: ^3.1.2
   date_picker_timeline:
     path: ./packages/date_picker_timeline_flutter
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
