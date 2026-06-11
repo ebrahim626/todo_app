@@ -156,8 +156,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
     required int taskStatus,
   }) async {
     try {
-      EasyLoading.show();
-      ref.notifyListeners();
 
       final repo = ref.read(addTaskRepository);
       CreateTaskRequest createTaskRequest = CreateTaskRequest(
@@ -174,8 +172,18 @@ class HomeController extends AutoDisposeAsyncNotifier {
         taskId: task.id,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        FlashCard.showSuccess(message: "${taskStatus == 1 ? "Mark as done successfully" : "Mark as closed successfully"}");
-        refresh();
+        FlashCard.showSuccess(
+          message: taskStatus == 1
+              ? "Mark as done successfully"
+              : "Mark as closed successfully",
+        );
+        final index = todoTasks?.indexWhere((t) => t.id == task.id);
+        if(index == null) return; // ✅ returns when NOT found
+        todoTasks?[index] = todoTasks![index].copyWith(taskStatus: taskStatus);
+
+        final indexAll = allTodoTasks?.indexWhere((t) => t.id == task.id);
+        if (indexAll == null) return; // ✅ returns when NOT found
+        allTodoTasks?[indexAll] = allTodoTasks![indexAll].copyWith(taskStatus: taskStatus);
         ref.notifyListeners();
       } else {
         log("Error updating task: ${response.data}");
@@ -185,8 +193,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
       }
     } catch (e) {
       log("Error updating task: $e");
-    } finally {
-      EasyLoading.dismiss();
     }
   }
 

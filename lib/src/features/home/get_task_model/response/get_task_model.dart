@@ -93,6 +93,34 @@ class TodoModel {
     this.updatedAt,
   });
 
+  TodoModel copyWith({
+    int? id,
+    int? userId,
+    String? title,
+    int? taskStatus,
+    int? taskPriority,
+    String? taskType,
+    DateTime? dueDate,
+    DateTime? reminderDate,
+    String? description,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return TodoModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      taskStatus: taskStatus ?? this.taskStatus,
+      taskPriority: taskPriority ?? this.taskPriority,
+      taskType: taskType ?? this.taskType,
+      dueDate: dueDate ?? this.dueDate,
+      reminderDate: reminderDate ?? this.reminderDate,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   factory TodoModel.fromJson(Map<String, dynamic> json) {
     return TodoModel(
       id: json['id'] ?? 0,
