@@ -31,7 +31,16 @@ class AddTaskRepository {
       tokenType: TokenType.bearerToken,
       path: ApiEndpoints.editTaskEndPoint(slotId: taskId),
       data: createTaskModel.toJson(),
+    );
+  }
 
+  Future<ApiResponse<dynamic>> deleteTask({
+    required int taskId,
+  }) async {
+    return await apiClient.delete(
+      apiType: APIType.private,
+      tokenType: TokenType.bearerToken,
+      path: ApiEndpoints.editTaskEndPoint(slotId: taskId),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:todo_app/src/core/router/app_routers.dart';
 import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/service/time_formatter.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
+import 'package:todo_app/src/features/common/view/bottom_sheet/warning_bottom_sheet.dart';
 import 'package:todo_app/src/features/home/view/components/task_priority.dart';
 import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
@@ -239,20 +240,39 @@ class HomeScreen extends ConsumerWidget {
                                                           ),
                                                         ),
                                                       ),
-                                                      PopupMenuItem<String>(
-                                                        value: 'change_status',
-                                                        height: 40,
-                                                        child: ListTile(
-                                                          dense: true,
-                                                          contentPadding:
-                                                              EdgeInsets.symmetric(
-                                                                horizontal: 12,
-                                                              ),
-                                                          title: Text(
-                                                            "Change Status",
+                                                      if (task.taskStatus != 1)
+                                                        PopupMenuItem<String>(
+                                                          value: 'mark_as_done',
+                                                          height: 40,
+                                                          child: ListTile(
+                                                            dense: true,
+                                                            contentPadding:
+                                                                EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      12,
+                                                                ),
+                                                            title: Text(
+                                                              "Mark As Done",
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
+                                                      if (task.taskStatus != 2)
+                                                        PopupMenuItem<String>(
+                                                          value:
+                                                              'mark_as_closed',
+                                                          height: 40,
+                                                          child: ListTile(
+                                                            dense: true,
+                                                            contentPadding:
+                                                                EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      12,
+                                                                ),
+                                                            title: Text(
+                                                              "Mark As Closed",
+                                                            ),
+                                                          ),
+                                                        ),
                                                       PopupMenuItem<String>(
                                                         value: 'delete',
                                                         height: 40,
@@ -282,11 +302,36 @@ class HomeScreen extends ConsumerWidget {
                                                         'reschedule') {
                                                       // handle reschedule
                                                     } else if (value ==
-                                                        'change_status') {
+                                                        'mark_as_done') {
                                                       // handle change status
+                                                      notifier.updateStatus(
+                                                        context,
+                                                        task: task,
+                                                        taskStatus: 1,
+                                                      );
+                                                    } else if (value ==
+                                                        'mark_as_closed') {
+                                                      // handle change status
+                                                      notifier.updateStatus(
+                                                        context,
+                                                        task: task,
+                                                        taskStatus: 2,
+                                                      );
                                                     } else if (value ==
                                                         'delete') {
                                                       // handle delete
+                                                      WarningBottomSheet.show(
+                                                        context,
+                                                        title:
+                                                            "Delete this task?",
+                                                        subtitle:
+                                                        "This action cannot be undone. The task will be permanently removed.",
+                                                        primaryButtonText:
+                                                            "Delete",
+                                                        onPrimaryButtonPressed: () {
+                                                          notifier.deleteTask(context, taskId: task.id);
+                                                        }
+                                                      );
                                                     }
                                                   });
                                                 },

@@ -11,13 +11,16 @@ import 'package:todo_app/src/features/home/repository/home_repository.dart';
 import 'package:todo_app/src/shared/toast/toast.dart';
 
 import '../../../core/utils/theme/theme.dart';
+import '../../add_task/model/request/create_task_request_model.dart';
+import '../../add_task/repository/add_task_repository.dart';
+import '../../history/controller/history_provider.dart';
 
-typedef HomeControllerProvider = AutoDisposeAsyncNotifierProvider<HomeController, dynamic>;
+typedef HomeControllerProvider =
+    AutoDisposeAsyncNotifierProvider<HomeController, dynamic>;
 
 final homeControllerProvider = HomeControllerProvider(HomeController.new);
 
 class HomeController extends AutoDisposeAsyncNotifier {
-
   List<TodoModel>? todoTasks;
   List<TodoModel>? allTodoTasks;
   DateTime selectedDate = DateTime.now();
@@ -28,17 +31,14 @@ class HomeController extends AutoDisposeAsyncNotifier {
   }
 
   Future<void> initial() async {
-   try{
+    try {
       EasyLoading.show();
-     await Future.wait([
-       getAllTasks(),
-       getTasks(),
-     ]);
-   }catch(e){
+      await Future.wait([getAllTasks(), getTasks()]);
+    } catch (e) {
       log("Error during initial data fetch: $e");
-   }finally{
-     EasyLoading.dismiss();
-   }
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 
   Color getStatusColor(int status) {
@@ -65,11 +65,7 @@ class HomeController extends AutoDisposeAsyncNotifier {
 
       final localDate = task.dueDate!.toLocal();
 
-      final key = DateTime(
-        localDate.year,
-        localDate.month,
-        localDate.day,
-      );
+      final key = DateTime(localDate.year, localDate.month, localDate.day);
 
       final color = getStatusColor(task.taskStatus ?? 1);
 
@@ -85,12 +81,11 @@ class HomeController extends AutoDisposeAsyncNotifier {
     return colorMap;
   }
 
-// Add this helper
+  // Add this helper
   List<Color> getColorsForDay(DateTime day) {
     final key = DateTime(day.year, day.month, day.day);
     return taskColorMap[key] ?? [];
   }
-
 
   Future<void> logOut(BuildContext context) async {
     ref.watch(cacheServiceProvider);
@@ -104,55 +99,124 @@ class HomeController extends AutoDisposeAsyncNotifier {
   }
 
   Future<void> getTasks({DateTime? date, bool isFirstLoad = true}) async {
-    try{
+    try {
       ref.notifyListeners();
-      isFirstLoad == false ?
-      EasyLoading.show() : null;
+      isFirstLoad == false ? EasyLoading.show() : null;
 
       final repoData = ref.read(homeRepository);
 
       ///"reminderDate": "2026-06-03T14:52:12.312Z",
       final response = await repoData.getAllTasks(date: date ?? DateTime.now());
 
-      if ( response.statusCode == 200 ) {
+      if (response.statusCode == 200) {
         // Handle successful response
-        final  data = TodoListResponse.fromJson(response.data);
+        final data = TodoListResponse.fromJson(response.data);
         todoTasks = data.data.data;
-
       } else {
         // Handle non-successful response
-      FlashCard.showError(errorMessage: "Failed to fetch tasks.");
+        FlashCard.showError(errorMessage: "Failed to fetch tasks.");
       }
-    }catch(e){
+    } catch (e) {
       log("Error fetching tasks: $e");
-      FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");
-    }
-    finally {
-      isFirstLoad == false ?
-      EasyLoading.dismiss() : null;
+      FlashCard.showError(
+        errorMessage: "An error occurred while fetching tasks.",
+      );
+    } finally {
+      isFirstLoad == false ? EasyLoading.dismiss() : null;
       ref.notifyListeners();
     }
   }
 
   Future<void> getAllTasks() async {
-    try{
+    try {
       final repoData = ref.read(homeRepository);
 
       final allResponse = await repoData.getAllTasks();
 
-      if(allResponse.statusCode == 200){
+      if (allResponse.statusCode == 200) {
         final allData = TodoListResponse.fromJson(allResponse.data);
         allTodoTasks = allData.data.data;
         log("tasks all : $allTodoTasks ");
       } else {
         FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
       }
-
-    }catch(e){
+    } catch (e) {
       log("Error fetching tasks: $e");
-      FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");
-    }finally {
+      FlashCard.showError(
+        errorMessage: "An error occurred while fetching tasks.",
+      );
+    } finally {
       ref.notifyListeners();
+    }
+  }
+
+  Future<void> updateStatus(
+    BuildContext context, {
+    required TodoModel task,
+    required int taskStatus,
+  }) async {
+    try {
+      EasyLoading.show();
+      ref.notifyListeners();
+
+      final repo = ref.read(addTaskRepository);
+      CreateTaskRequest createTaskRequest = CreateTaskRequest(
+        title: task.title,
+        taskStatus: taskStatus, // Changing task status
+        taskPriority: task.taskPriority,
+        taskType: task.taskType,
+        dueDate: task.dueDate ?? DateTime.now(),
+        reminderDate: task.reminderDate ?? DateTime.now(),
+        description: task.description,
+      );
+      final response = await repo.updateTask(
+        createTaskModel: createTaskRequest,
+        taskId: task.id,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        FlashCard.showSuccess(message: "${taskStatus == 1 ? "Mark as done successfully" : "Mark as closed successfully"}");
+        refresh();
+        ref.notifyListeners();
+      } else {
+        log("Error updating task: ${response.data}");
+        FlashCard.showError(
+          errorMessage: "Failed to update task: ${response.data["message"]}",
+        );
+      }
+    } catch (e) {
+      log("Error updating task: $e");
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> deleteTask(
+      BuildContext context, {
+        required int taskId,
+      }) async {
+    try {
+      EasyLoading.show();
+      ref.notifyListeners();
+
+      final repo = ref.read(addTaskRepository);
+      final response = await repo.deleteTask(
+        taskId: taskId,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        FlashCard.showSuccess(message: "Task deleted successfully");
+        refresh();
+        ref.notifyListeners();
+        context.pop();
+      } else {
+        log("Error updating task: ${response.data}");
+        FlashCard.showError(
+          errorMessage: "Failed to update task: ${response.data["message"]}",
+        );
+      }
+    } catch (e) {
+      log("Error updating task: $e");
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
