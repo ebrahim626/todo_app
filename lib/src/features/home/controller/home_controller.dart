@@ -202,15 +202,21 @@ class HomeController extends AutoDisposeAsyncNotifier {
       }) async {
     try {
       EasyLoading.show();
-      ref.notifyListeners();
-
       final repo = ref.read(addTaskRepository);
       final response = await repo.deleteTask(
         taskId: taskId,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         FlashCard.showSuccess(message: "Task deleted successfully");
-        refresh();
+
+        // Remove from todoTasks
+        final index = todoTasks?.indexWhere((t) => t.id == taskId);
+        if (index == null || index == -1) return;
+        todoTasks?.removeAt(index); // ✅ just remove
+
+        final indexAll = allTodoTasks?.indexWhere((t) => t.id == taskId);
+        if (indexAll == null) return; // ✅ returns when NOT found
+        allTodoTasks?.removeAt(index);
         ref.notifyListeners();
         context.pop();
       } else {
@@ -221,7 +227,7 @@ class HomeController extends AutoDisposeAsyncNotifier {
       }
     } catch (e) {
       log("Error updating task: $e");
-    } finally {
+    }finally{
       EasyLoading.dismiss();
     }
   }
