@@ -15,6 +15,8 @@ class HomeRepository {
   Future<ApiResponse<dynamic>> getAllTasks({
     DateTime? date,
     bool isHistory = false,
+    int? pageSize,
+    int? page
   }) async {
     final offset = DateTime.now().timeZoneOffset; // e.g. Duration(hours: 6) for BD
     return await apiClient.get(
@@ -26,7 +28,8 @@ class HomeRepository {
         if (date != null) 'dueDateTo': DateFormat("yyyy-MM-dd").format(date),
         'utcOffsetMinutes': offset.inMinutes.toString(), // ✅ "360"
         'History': isHistory,
-        'pageSize' : 100
+        'pageSize' : pageSize ?? 100,
+        "page" : page ?? 1,
       },
     );
   }

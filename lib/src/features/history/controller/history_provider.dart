@@ -3,22 +3,27 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:todo_app/src/features/history/repository/history_repository.dart';
 import '../../../core/utils/theme/theme.dart';
 import '../../../shared/toast/toast.dart';
 import '../../home/get_task_model/response/get_task_model.dart';
-import '../../home/repository/home_repository.dart';
 
-typedef HistoryNotifier = AutoDisposeAsyncNotifierProvider<HistoryProvider,void>;
+typedef HistoryNotifier =
+    AutoDisposeAsyncNotifierProvider<HistoryProvider, void>;
 
 final historyProvider = HistoryNotifier(HistoryProvider.new);
 
 class HistoryProvider extends AutoDisposeAsyncNotifier {
-
   List<TodoModel>? allTodoTasks;
+
+  final PagingController<int, TodoModel> taskPagingController = PagingController(firstPageKey: 1);
 
   @override
   FutureOr<dynamic> build() async {
-    await getTasks();
+    taskPagingController.addPageRequestListener((pageKey) async {
+      await getTasksHistory(page: pageKey);
+    });
   }
 
   Color getStatusColor(int status) {
@@ -36,29 +41,39 @@ class HistoryProvider extends AutoDisposeAsyncNotifier {
     }
   }
 
-  FutureOr<void> getTasks({DateTime? date}) async {
-    try{
-      EasyLoading.show();
-      ref.notifyListeners();
+  FutureOr<void> getTasksHistory({
+    required int page,
+    int pageSize = 10,
+  }) async {
+    try {
+      final repoData = ref.read(historyRepository);
 
-      final repoData = ref.read(homeRepository);
+      final allResponse = await repoData.getHistoryTasks(
+        page: page,
+        pageSize: pageSize,
+      );
 
-      final allResponse = await repoData.getAllTasks(isHistory: true);
+      if (allResponse.statusCode == 200) {
+        final data = TodoListResponse.fromJson(allResponse.data);
+        final newItems = data.data.data;
+        final isLastPage = newItems.length < pageSize;
 
-      if(allResponse.statusCode == 200){
-        final allData = TodoListResponse.fromJson(allResponse.data);
-        allTodoTasks = allData.data.data;
+        if(isLastPage) {
+          taskPagingController.appendLastPage(newItems);
+        }else {
+          final nextPageKey = page + 1;
+          taskPagingController.appendPage(newItems, nextPageKey);
+
+        }
+
       } else {
-        FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
+        FlashCard.showError(errorMessage: "Failed to fetch history tasks.");
       }
-    }catch(e){
+    } catch (e) {
       log("Error fetching tasks: $e");
-      FlashCard.showError(errorMessage: "An error occurred while fetching tasks.");
-    }
-    finally {
-      EasyLoading.dismiss();
-      ref.notifyListeners();
+      FlashCard.showError(
+        errorMessage: "An error occurred while fetching tasks.",
+      );
     }
   }
-
 }
