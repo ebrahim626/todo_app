@@ -226,20 +226,6 @@ class HomeScreen extends ConsumerWidget {
                                                           title: Text("Edit"),
                                                         ),
                                                       ),
-                                                      PopupMenuItem<String>(
-                                                        value: 'reschedule',
-                                                        height: 40,
-                                                        child: ListTile(
-                                                          dense: true,
-                                                          contentPadding:
-                                                              EdgeInsets.symmetric(
-                                                                horizontal: 12,
-                                                              ),
-                                                          title: Text(
-                                                            "Reschedule",
-                                                          ),
-                                                        ),
-                                                      ),
                                                       if (task.taskStatus != 1)
                                                         PopupMenuItem<String>(
                                                           value: 'mark_as_done',
@@ -298,9 +284,6 @@ class HomeScreen extends ConsumerWidget {
                                                         AppRoutes.addTaskRoute,
                                                         extra: task,
                                                       );
-                                                    } else if (value ==
-                                                        'reschedule') {
-                                                      // handle reschedule
                                                     } else if (value ==
                                                         'mark_as_done') {
                                                       // handle change status

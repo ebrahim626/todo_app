@@ -9,11 +9,9 @@ import 'package:todo_app/src/core/router/app_routers.dart';
 import 'package:todo_app/src/features/home/get_task_model/response/get_task_model.dart';
 import 'package:todo_app/src/features/home/repository/home_repository.dart';
 import 'package:todo_app/src/shared/toast/toast.dart';
-
 import '../../../core/utils/theme/theme.dart';
 import '../../add_task/model/request/create_task_request_model.dart';
 import '../../add_task/repository/add_task_repository.dart';
-import '../../history/controller/history_provider.dart';
 
 typedef HomeControllerProvider =
     AutoDisposeAsyncNotifierProvider<HomeController, dynamic>;
@@ -194,6 +192,9 @@ class HomeController extends AutoDisposeAsyncNotifier {
     } catch (e) {
       log("Error updating task: $e");
     }
+    finally{
+      ref.notifyListeners();
+  }
   }
 
   Future<void> deleteTask(
