@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/features/history/repository/history_repository.dart';
 import '../../../core/utils/theme/theme.dart';
 import '../../../shared/toast/toast.dart';
+import '../../add_task/model/request/create_task_request_model.dart';
+import '../../add_task/repository/add_task_repository.dart';
 import '../../home/get_task_model/response/get_task_model.dart';
 
 typedef HistoryNotifier = AsyncNotifierProvider<HistoryProvider, void>;
@@ -41,7 +45,7 @@ class HistoryProvider extends AsyncNotifier {
     }
   }
 
-  void refresh() {
+  Future<void> refresh() async {
     taskPagingController.refresh(); // triggers pageRequestListener → API call
   }
 
@@ -75,4 +79,88 @@ class HistoryProvider extends AsyncNotifier {
       );
     }
   }
+
+  Future<void> updateStatus(
+      BuildContext context, {
+        required TodoModel task,
+        required int taskStatus,
+      }) async {
+    try {
+
+      final repo = ref.read(addTaskRepository);
+      CreateTaskRequest createTaskRequest = CreateTaskRequest(
+        title: task.title,
+        taskStatus: taskStatus, // Changing task status
+        taskPriority: task.taskPriority,
+        taskType: task.taskType,
+        dueDate: task.dueDate ?? DateTime.now(),
+        reminderDate: task.reminderDate ?? DateTime.now(),
+        description: task.description,
+      );
+      final response = await repo.updateTask(
+        createTaskModel: createTaskRequest,
+        taskId: task.id,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        FlashCard.showSuccess(
+          message: taskStatus == 1
+              ? "Mark as done successfully"
+              : "Mark as closed successfully",
+        );
+
+        final updatedHistory =  taskPagingController.itemList?.map((t) {
+          return t.id == task.id ? t.copyWith(taskStatus:  taskStatus) : t;
+        }).toList();
+        if(updatedHistory != null) {
+          taskPagingController.itemList = updatedHistory;
+        }
+        ref.notifyListeners();
+
+      } else {
+        log("Error updating task: ${response.data}");
+        FlashCard.showError(
+          errorMessage: "Failed to update task: ${response.data["message"]}",
+        );
+      }
+    } catch (e) {
+      log("Error updating task: $e");
+    }
+  }
+
+  Future<void> deleteTask(
+      BuildContext context, {
+        required int taskId,
+      }) async {
+    try {
+      EasyLoading.show();
+      final repo = ref.read(addTaskRepository);
+      final response = await repo.deleteTask(
+        taskId: taskId,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        FlashCard.showSuccess(message: "Task deleted successfully");
+
+        // Remove from paged list
+        final updatedItems = taskPagingController.itemList
+            ?.where((t) => t.id != taskId)
+            .toList();
+
+        if (updatedItems != null) {
+          taskPagingController.itemList = updatedItems;
+        }
+        ref.notifyListeners();
+        context.pop();
+      } else {
+        log("Error updating task: ${response.data}");
+        FlashCard.showError(
+          errorMessage: "Failed to update task: ${response.data["message"]}",
+        );
+      }
+    } catch (e) {
+      log("Error updating task: $e");
+    }finally{
+      EasyLoading.dismiss();
+    }
+  }
+
 }

@@ -192,9 +192,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
     } catch (e) {
       log("Error updating task: $e");
     }
-    finally{
-      ref.notifyListeners();
-  }
   }
 
   Future<void> deleteTask(
