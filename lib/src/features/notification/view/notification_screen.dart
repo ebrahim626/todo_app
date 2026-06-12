@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
 import 'package:todo_app/src/features/notification/controller/notification_provider.dart';
+import 'package:todo_app/src/features/notification/notification_model/response/Notification_response.dart';
 
 import '../../../core/utils/theme/theme.dart';
 
@@ -41,39 +43,44 @@ class NotificationScreen extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: pendingColor,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "You have an upcoming task: Need To Fix Main Door Lock.",
-                    style: context.text.titleSmall?.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Spacer(),
-                      Text(
-                        "2 minutes ago",
-                        style: context.text.titleSmall?.copyWith(
-                          color: Colors.white,
-                        ),
+        child: PagedListView(
+          padding: const EdgeInsets.only(bottom: 85),
+          pagingController: notifier.notificationPagingController,
+          builderDelegate: PagedChildBuilderDelegate<AppNotification>(
+            itemBuilder: (context, item, index) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: pendingColor,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${item.title}",
+                      style: context.text.titleSmall?.copyWith(
+                        color: Colors.white,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    Row(
+                      children: [
+                        Spacer(),
+                        Text(
+                          "2 minutes ago",
+                          style: context.text.titleSmall?.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
