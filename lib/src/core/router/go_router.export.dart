@@ -6,6 +6,7 @@ import 'package:todo_app/src/features/auth/get_started/view/get_started_screen.d
 import 'package:todo_app/src/features/auth/google_login/view/google_login_screen.dart';
 import 'package:todo_app/src/features/history/view/history_screen.dart';
 import 'package:todo_app/src/features/home/view/home_screen.dart';
+import 'package:todo_app/src/features/notification/view/notification_screen.dart';
 
 import '../../features/home/get_task_model/response/get_task_model.dart';
 import '../../features/splash_screen/view/splash_screen.dart';

@@ -134,7 +134,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
       if (allResponse.statusCode == 200) {
         final allData = TodoListResponse.fromJson(allResponse.data);
         allTodoTasks = allData.data.data;
-        log("tasks all : $allTodoTasks ");
       } else {
         FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
       }

@@ -36,6 +36,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: AddTaskScreen.name,
         builder: (context, state) =>  AddTaskScreen(task: state.extra as TodoModel?),
       ),
+      GoRoute(
+        path: AppRoutes.notificationRoute,
+        name: NotificationScreen.name,
+        builder: (_, __) => const NotificationScreen(),
+      ),
 
 
       // shell route for bottom navigation bar

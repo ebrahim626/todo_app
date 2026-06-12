@@ -5,4 +5,5 @@ class AppRoutes {
   static const String homeRoute = '/home';
   static const String historyRoute = '/history-screen';
   static const String addTaskRoute = '/add-task';
+  static const String notificationRoute = '/notification-screen';
 }
