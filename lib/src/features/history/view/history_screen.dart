@@ -375,7 +375,6 @@ class HistoryScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                              firstPageErrorIndicatorBuilder: (context) => Container(height: 55,child: Text("hello"),)
                           ),
                         ),
                       ),

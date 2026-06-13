@@ -6,6 +6,7 @@ import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/service/time_formatter.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import 'package:todo_app/src/features/common/view/bottom_sheet/warning_bottom_sheet.dart';
+import 'package:todo_app/src/features/common/view/custom_widgets/no_item_found_container.dart';
 import 'package:todo_app/src/features/home/view/components/task_priority.dart';
 import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
@@ -117,33 +118,10 @@ class HomeScreen extends ConsumerWidget {
                           ),
                           12.ph,
                           tasks == null || tasks.isEmpty
-                              ? Container(
-                                  height: 180,
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: primaryColor,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "No tasks for this day.",
-                                        style: context.text.bodyLarge?.copyWith(
-                                          color: Colors.white,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      6.ph,
-                                      Text(
-                                        "Dates with tasks will display colored dots below them, indicating the status of the tasks for that day.",
-                                        style: context.text.labelSmall
-                                            ?.copyWith(color: Colors.white),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
+                              ? NoItemFoundContainer(
+                                  title: "No tasks for this day.",
+                                  subTitle:
+                                      "Dates with tasks will display colored dots below them, indicating the status of the tasks for that day.",
                                 )
                               : ListView.separated(
                                   padding: EdgeInsets.zero,
@@ -308,12 +286,18 @@ class HomeScreen extends ConsumerWidget {
                                                         title:
                                                             "Delete this task?",
                                                         subtitle:
-                                                        "This action cannot be undone. The task will be permanently removed.",
+                                                            "This action cannot be undone. The task will be permanently removed.",
                                                         primaryButtonText:
                                                             "Delete",
-                                                        onPrimaryButtonPressed: () {
-                                                          notifier.deleteTask(context, taskId: task.id);
-                                                        }
+                                                        onPrimaryButtonPressed:
+                                                            () {
+                                                              notifier
+                                                                  .deleteTask(
+                                                                    context,
+                                                                    taskId:
+                                                                        task.id,
+                                                                  );
+                                                            },
                                                       );
                                                     }
                                                   });

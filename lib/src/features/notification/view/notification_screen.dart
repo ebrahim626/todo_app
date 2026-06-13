@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
+import 'package:todo_app/src/features/common/view/custom_widgets/no_item_found_container.dart';
 import 'package:todo_app/src/features/notification/controller/notification_provider.dart';
 import 'package:todo_app/src/features/notification/notification_model/response/Notification_response.dart';
 
@@ -47,6 +48,10 @@ class NotificationScreen extends ConsumerWidget {
           padding: const EdgeInsets.only(bottom: 85),
           pagingController: notifier.notificationPagingController,
           builderDelegate: PagedChildBuilderDelegate<AppNotification>(
+            noItemsFoundIndicatorBuilder: (context) => NoItemFoundContainer(
+              title: "No notifications at this moment.",
+              subTitle: "New notifications will appear here. Unread items will be highlighted with a count on the notification icon.",
+            ),
             itemBuilder: (context, item, index) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Container(

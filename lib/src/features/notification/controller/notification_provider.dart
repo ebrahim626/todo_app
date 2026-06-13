@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/features/notification/notification_model/response/Notification_response.dart';
@@ -14,6 +13,7 @@ final notificationProvider = NotificationNotifier(NotificationProvider.new);
 
 class NotificationProvider extends AutoDisposeAsyncNotifier {
 
+  int? unReadNotifications;
   final PagingController<int, AppNotification> notificationPagingController =
       PagingController(firstPageKey: 1);
 
@@ -27,11 +27,12 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
   Future<void> getNotifications(int pageKey) async {
     try {
       final repo = ref.read(notificationRepository);
-      final response = await repo.getNotifications();
+      final response = await repo.getNotifications(pageKey);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = NotificationResponse.fromJson(response.data);
         final appNotifications = data.data.notifications;
+        unReadNotifications = data.data.totalUnreadCount;
         final isLastPage = appNotifications.length < 20;
 
         if (isLastPage) {
