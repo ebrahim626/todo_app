@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:todo_app/src/core/service/time_formatter.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
 import 'package:todo_app/src/features/common/view/custom_widgets/no_item_found_container.dart';
 import 'package:todo_app/src/features/notification/controller/notification_provider.dart';
@@ -50,7 +51,8 @@ class NotificationScreen extends ConsumerWidget {
           builderDelegate: PagedChildBuilderDelegate<AppNotification>(
             noItemsFoundIndicatorBuilder: (context) => NoItemFoundContainer(
               title: "No notifications at this moment.",
-              subTitle: "New notifications will appear here. Unread items will be highlighted with a count on the notification icon.",
+              subTitle:
+                  "New notifications will appear here. Unread items will be highlighted with a count on the notification icon.",
             ),
             itemBuilder: (context, item, index) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
@@ -74,7 +76,7 @@ class NotificationScreen extends ConsumerWidget {
                       children: [
                         Spacer(),
                         Text(
-                          "2 minutes ago",
+                          "${DateTimeFormatter.timeAgo(item.sentAt)}",
                           style: context.text.titleSmall?.copyWith(
                             color: Colors.white,
                           ),

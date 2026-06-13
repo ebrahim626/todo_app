@@ -8,6 +8,24 @@ class DateTimeFormatter {
     if (dateTime == null) return '';
     return DateFormat('h:mm a').format(dateTime.toLocal());
   }
+ /// Formats a how may time and days ago
+  static String timeAgo(DateTime? dateTime) {
+    if (dateTime == null) return '';
+
+    final difference = DateTime.now().difference(dateTime.toLocal());
+
+    if (difference.inSeconds < 60) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+    } else {
+      return DateFormat('dd MMM yyyy').format(dateTime.toLocal());
+    }
+  }
 
   /// Formats a TimeOfDay to "HH:mm am/pm" for display.
   static String formatTime(TimeOfDay time) {
