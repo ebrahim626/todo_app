@@ -99,20 +99,42 @@ class HistoryScreen extends ConsumerWidget {
                   children: [
                     Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
+                        PopupMenuButton<String>(
+                          onOpened: () => notifier.setStatusMenuState(true),
+                          onCanceled: () => notifier.setStatusMenuState(false),
+                          offset: const Offset(0, 36),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(99),
-                            border: Border.all(color: Colors.black54),
-                          ),
-                          child: Row(
-                            children: [
-                              Text("Status"),
-                              Icon(Icons.keyboard_arrow_down_outlined),
-                            ],
+                          onSelected: (value) => notifier.filterByStatus(value),
+                          itemBuilder: (context) =>
+                              notifier.taskStatusList
+                                  .map(
+                                    (s) =>
+                                        PopupMenuItem(value: s, child: Text(s)),
+                                  )
+                                  .toList(),
+                          color: backgroundColor,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(99),
+                              border: Border.all(color: Colors.black54),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(notifier.dropDownLabel ?? "Status"),
+                                Icon(
+                                  notifier.isStatusMenuOpen
+                                      ? Icons.keyboard_arrow_up_outlined
+                                      : Icons.keyboard_arrow_down_outlined,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         10.pw,
@@ -147,14 +169,16 @@ class HistoryScreen extends ConsumerWidget {
                           padding: const EdgeInsets.only(bottom: 85),
                           pagingController: notifier.taskPagingController,
                           builderDelegate: PagedChildBuilderDelegate<TodoModel>(
-                            itemBuilder: (context, item , index) => Padding(
+                            itemBuilder: (context, item, index) => Padding(
                               padding: const EdgeInsets.only(bottom: 10),
                               child: Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  color: notifier.getStatusColor(item.taskStatus),
+                                  color: notifier.getStatusColor(
+                                    item.taskStatus,
+                                  ),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,33 +191,35 @@ class HistoryScreen extends ConsumerWidget {
                                         8.pw,
                                         CardStatusWidget(
                                           statusTitle:
-                                          "${TaskPriority.getLabel(item.taskPriority)}",
+                                              "${TaskPriority.getLabel(item.taskPriority)}",
                                         ),
                                         8.pw,
                                         CardStatusWidget(
                                           statusTitle:
-                                          "${TaskStatus.getLabel(item.taskStatus)}",
+                                              "${TaskStatus.getLabel(item.taskStatus)}",
                                         ),
                                         Spacer(),
                                         GestureDetector(
                                           onTapDown: (TapDownDetails details) {
                                             final RenderBox overlay =
-                                            Overlay.of(
-                                              context,
-                                            ).context.findRenderObject()
-                                            as RenderBox;
+                                                Overlay.of(
+                                                      context,
+                                                    ).context.findRenderObject()
+                                                    as RenderBox;
                                             showMenu(
                                               context: context,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadiusGeometry.circular(12),
+                                                    BorderRadiusGeometry.circular(
+                                                      12,
+                                                    ),
                                               ),
                                               color: const Color(
                                                 0xffEEFAFF,
                                               ), // menu background color
                                               position: RelativeRect.fromRect(
                                                 details.globalPosition &
-                                                const Size(40, 40),
+                                                    const Size(40, 40),
                                                 Offset.zero & overlay.size,
                                               ),
                                               items: [
@@ -203,9 +229,9 @@ class HistoryScreen extends ConsumerWidget {
                                                   child: ListTile(
                                                     dense: true,
                                                     contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                    ),
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: 12,
+                                                        ),
                                                     title: Text("Edit"),
                                                   ),
                                                 ),
@@ -216,10 +242,9 @@ class HistoryScreen extends ConsumerWidget {
                                                     child: ListTile(
                                                       dense: true,
                                                       contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                        horizontal:
-                                                        12,
-                                                      ),
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                          ),
                                                       title: Text(
                                                         "Mark As Done",
                                                       ),
@@ -227,16 +252,14 @@ class HistoryScreen extends ConsumerWidget {
                                                   ),
                                                 if (item.taskStatus != 2)
                                                   PopupMenuItem<String>(
-                                                    value:
-                                                    'mark_as_closed',
+                                                    value: 'mark_as_closed',
                                                     height: 40,
                                                     child: ListTile(
                                                       dense: true,
                                                       contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                        horizontal:
-                                                        12,
-                                                      ),
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                          ),
                                                       title: Text(
                                                         "Mark As Closed",
                                                       ),
@@ -248,9 +271,9 @@ class HistoryScreen extends ConsumerWidget {
                                                   child: ListTile(
                                                     dense: true,
                                                     contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                    ),
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: 12,
+                                                        ),
                                                     title: Text(
                                                       "Delete",
                                                       style: TextStyle(
@@ -267,7 +290,7 @@ class HistoryScreen extends ConsumerWidget {
                                                   AppRoutes.addTaskRoute,
                                                   extra: item,
                                                 );
-                                              }  else if (value ==
+                                              } else if (value ==
                                                   'mark_as_done') {
                                                 // handle change status
                                                 notifier.updateStatus(
@@ -283,20 +306,20 @@ class HistoryScreen extends ConsumerWidget {
                                                   task: item,
                                                   taskStatus: 2,
                                                 );
-                                              } else if (value ==
-                                                  'delete') {
+                                              } else if (value == 'delete') {
                                                 // handle delete
                                                 WarningBottomSheet.show(
-                                                    context,
-                                                    title:
-                                                    "Delete this task?",
-                                                    subtitle:
-                                                    "This action cannot be undone. The task will be permanently removed.",
-                                                    primaryButtonText:
-                                                    "Delete",
-                                                    onPrimaryButtonPressed: () {
-                                                      notifier.deleteTask(context, taskId: item.id);
-                                                    }
+                                                  context,
+                                                  title: "Delete this task?",
+                                                  subtitle:
+                                                      "This action cannot be undone. The task will be permanently removed.",
+                                                  primaryButtonText: "Delete",
+                                                  onPrimaryButtonPressed: () {
+                                                    notifier.deleteTask(
+                                                      context,
+                                                      taskId: item.id,
+                                                    );
+                                                  },
                                                 );
                                               }
                                             });
@@ -304,7 +327,8 @@ class HistoryScreen extends ConsumerWidget {
                                           child: Container(
                                             padding: EdgeInsets.all(3),
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(99),
+                                              borderRadius:
+                                                  BorderRadius.circular(99),
                                               color: Colors.white,
                                             ),
                                             child: Icon(
@@ -328,7 +352,9 @@ class HistoryScreen extends ConsumerWidget {
                                       4.ph,
                                       Text(
                                         item.description,
-                                        style: context.text.bodySmall?.copyWith(color: Colors.white),
+                                        style: context.text.bodySmall?.copyWith(
+                                          color: Colors.white,
+                                        ),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -338,16 +364,14 @@ class HistoryScreen extends ConsumerWidget {
                                       children: [
                                         Text(
                                           "${DateFormatter.formatDate(item.dueDate ?? DateTime.now())}",
-                                          style: context.text.bodySmall?.copyWith(
-                                            color: Colors.white,
-                                          ),
+                                          style: context.text.bodySmall
+                                              ?.copyWith(color: Colors.white),
                                         ),
                                         Spacer(),
                                         Text(
                                           "Time: ${DateTimeFormatter.time(item.dueDate)}",
-                                          style: context.text.bodySmall?.copyWith(
-                                            color: Colors.white,
-                                          ),
+                                          style: context.text.bodySmall
+                                              ?.copyWith(color: Colors.white),
                                         ),
                                         // Spacer(),
                                         // Container(
@@ -375,6 +399,8 @@ class HistoryScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
+                            firstPageErrorIndicatorBuilder: (context) =>
+                                Container(height: 55, child: Text("hello")),
                           ),
                         ),
                       ),

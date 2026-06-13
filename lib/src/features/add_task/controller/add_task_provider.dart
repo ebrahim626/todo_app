@@ -197,7 +197,7 @@ class AddTaskProvider extends AutoDisposeFamilyAsyncNotifier<void, TodoModel?> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         FlashCard.showSuccess(message: "Task ${isUpdate ? "updated" : "added"} successfully");
         ref.invalidate(homeControllerProvider);
-        ref.invalidate(historyProvider);
+        ref.read(historyProvider.notifier).taskPagingController.refresh();
         ref.notifyListeners();
         context.pop();
       } else {

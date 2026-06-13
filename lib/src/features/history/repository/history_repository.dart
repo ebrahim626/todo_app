@@ -14,9 +14,9 @@ class HistoryRepository {
 
   Future<ApiResponse<dynamic>> getHistoryTasks({
     required int pageSize,
-    required int page
+    required int page,
+    int? taskStatus,
   }) async {
-    final offset = DateTime.now().timeZoneOffset; // e.g. Duration(hours: 6) for BD
     return await apiClient.get(
       apiType: APIType.private,
       tokenType: TokenType.bearerToken,
@@ -25,6 +25,8 @@ class HistoryRepository {
         'History': true,
         'pageSize' : pageSize,
         "PageNumber" : page,
+        if(taskStatus != null)
+        "TaskStatus" : taskStatus.toString(),
       },
     );
   }

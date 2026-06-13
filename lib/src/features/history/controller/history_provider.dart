@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/features/history/repository/history_repository.dart';
+import 'package:todo_app/src/features/home/view/components/task_status.dart';
 import '../../../core/utils/theme/theme.dart';
 import '../../../shared/toast/toast.dart';
 import '../../add_task/model/request/create_task_request_model.dart';
@@ -18,16 +19,32 @@ final historyProvider = HistoryNotifier(HistoryProvider.new);
 class HistoryProvider extends AsyncNotifier {
   final PagingController<int, TodoModel> taskPagingController =
       PagingController(firstPageKey: 1);
+  int? selectedTaskStatus;
+  String? dropDownLabel;
+  int? selectedTaskPriority;
+  bool isStatusMenuOpen = false;
+  List<String> taskStatusList = ['Done', 'Closed', 'Pending', 'Upcoming'];
+  final defaultStatusList = ['Done', 'Closed', 'Pending', 'Upcoming'];
 
   @override
   FutureOr<dynamic> build() async {
-    ref.onDispose(() {
-      taskPagingController.dispose();
-    });
+    log("BUILD CALLED");
+
+    ref.onDispose(() => taskPagingController.dispose());
 
     taskPagingController.addPageRequestListener((pageKey) async {
-      await getTasksHistory(page: pageKey);
+      log("PAGE REQUEST: $pageKey");
+      if (selectedTaskStatus != null) {
+        await viewByStatus(page: pageKey, taskStatus: selectedTaskStatus!);
+      } else {
+        await getTasksHistory(page: pageKey);
+      }
     });
+  }
+
+  void setStatusMenuState(bool value) {
+    isStatusMenuOpen = value;
+    ref.notifyListeners();
   }
 
   Color getStatusColor(int status) {
@@ -81,12 +98,11 @@ class HistoryProvider extends AsyncNotifier {
   }
 
   Future<void> updateStatus(
-      BuildContext context, {
-        required TodoModel task,
-        required int taskStatus,
-      }) async {
+    BuildContext context, {
+    required TodoModel task,
+    required int taskStatus,
+  }) async {
     try {
-
       final repo = ref.read(addTaskRepository);
       CreateTaskRequest createTaskRequest = CreateTaskRequest(
         title: task.title,
@@ -108,14 +124,13 @@ class HistoryProvider extends AsyncNotifier {
               : "Mark as closed successfully",
         );
 
-        final updatedHistory =  taskPagingController.itemList?.map((t) {
-          return t.id == task.id ? t.copyWith(taskStatus:  taskStatus) : t;
+        final updatedHistory = taskPagingController.itemList?.map((t) {
+          return t.id == task.id ? t.copyWith(taskStatus: taskStatus) : t;
         }).toList();
-        if(updatedHistory != null) {
+        if (updatedHistory != null) {
           taskPagingController.itemList = updatedHistory;
         }
         ref.notifyListeners();
-
       } else {
         log("Error updating task: ${response.data}");
         FlashCard.showError(
@@ -127,16 +142,11 @@ class HistoryProvider extends AsyncNotifier {
     }
   }
 
-  Future<void> deleteTask(
-      BuildContext context, {
-        required int taskId,
-      }) async {
+  Future<void> deleteTask(BuildContext context, {required int taskId}) async {
     try {
       EasyLoading.show();
       final repo = ref.read(addTaskRepository);
-      final response = await repo.deleteTask(
-        taskId: taskId,
-      );
+      final response = await repo.deleteTask(taskId: taskId);
       if (response.statusCode == 200 || response.statusCode == 201) {
         FlashCard.showSuccess(message: "Task deleted successfully");
 
@@ -157,10 +167,62 @@ class HistoryProvider extends AsyncNotifier {
         );
       }
     } catch (e) {
-      log("Error updating task: $e");
-    }finally{
+      log("Error deleting tasks: $e");
+      FlashCard.showError(
+        errorMessage: "An error occurred while deleting tasks.",
+      );
+    } finally {
       EasyLoading.dismiss();
     }
   }
 
+  Future<void> viewByStatus({
+    required int page,
+    int pageSize = 10,
+    required int taskStatus,
+  }) async {
+    try {
+      final repo = ref.read(historyRepository);
+      final response = await repo.getHistoryTasks(
+        pageSize: pageSize,
+        page: page,
+        taskStatus: taskStatus,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = TodoListResponse.fromJson(response.data);
+        final newItems = data.data.data;
+        final isLastPage = newItems.length < pageSize;
+
+        if (isLastPage) {
+          taskPagingController.appendLastPage(newItems);
+        } else {
+          taskPagingController.appendPage(newItems, page + 1);
+        }
+      }
+    } catch (e) {
+      log("Error updating status : $e");
+      FlashCard.showError(
+        errorMessage: "An error occurred while updating status.",
+      );
+    }
+  }
+
+  Future<void> filterByStatus(String label) async {
+    if (label == 'All') {
+      taskStatusList = List.from(defaultStatusList);
+      dropDownLabel = null;
+    } else {
+      dropDownLabel = label;
+
+      taskStatusList = List.from(defaultStatusList);
+      taskStatusList.remove(label);
+      taskStatusList.insert(0, 'All');
+    }
+    isStatusMenuOpen = false;
+    selectedTaskStatus = TaskStatus.getValue(label);
+
+    ref.notifyListeners();
+    taskPagingController.itemList = [];
+    taskPagingController.refresh();
+  }
 }
