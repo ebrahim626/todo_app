@@ -12,14 +12,16 @@ class NotificationRepository {
 
   final ApiClient apiClient;
 
-  Future<ApiResponse<dynamic>> getNotifications(int pageKey) async {
+  Future<ApiResponse<dynamic>> getNotifications({required int pageKey, int? pageSize}) async {
     return await apiClient.get(
       apiType: APIType.private,
       tokenType: TokenType.bearerToken,
       path: ApiEndpoints.getNotificationsEndpoint,
-      // query: {
-      //   "page" : pageKey,
-      // }
+      query: {
+        "pageNumber" : pageKey,
+        "pageSize" : pageSize ?? 15,
+
+      }
     );
   }
 }

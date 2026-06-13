@@ -16,48 +16,49 @@ class NotificationResponse {
       data: NotificationData.fromJson(json['data'] ?? {}),
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'isSuccess': isSuccess,
-    'message': message,
-    'data': data.toJson(),
-  };
 }
 
 class NotificationData {
-  final List<AppNotification> notifications;
+  final int pageNumber;
+  final int pageSize;
+  final int totalPages;
+  final int totalCount;
   final int totalUnreadCount;
+  final List<AppNotification> notifications;
 
   NotificationData({
-    required this.notifications,
+    required this.pageNumber,
+    required this.pageSize,
+    required this.totalPages,
+    required this.totalCount,
     required this.totalUnreadCount,
+    required this.notifications,
   });
 
   factory NotificationData.fromJson(Map<String, dynamic> json) {
     return NotificationData(
-      notifications: (json['notifications'] as List<dynamic>? ?? [])
+      pageNumber: json['pageNumber'] ?? 1,
+      pageSize: json['pageSize'] ?? 0,
+      totalPages: json['totalPages'] ?? 0,
+      totalCount: json['totalCount'] ?? 0,
+      totalUnreadCount: json['totalUnreadCount'] ?? 0,
+      notifications: (json['data'] as List<dynamic>? ?? [])
           .map((e) => AppNotification.fromJson(e))
           .toList(),
-      totalUnreadCount: json['totalUnreadCount'] ?? 0,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'notifications': notifications.map((e) => e.toJson()).toList(),
-    'totalUnreadCount': totalUnreadCount,
-  };
 }
 
 class AppNotification {
   final int id;
   final String title;
   final String body;
-  final DateTime sentAt;
+  final DateTime? sentAt;
   final bool isRead;
   final int userId;
   final int? todoId;
 
-  AppNotification({
+  const AppNotification({
     required this.id,
     required this.title,
     required this.body,
@@ -72,22 +73,14 @@ class AppNotification {
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
       body: json['body'] ?? '',
-      sentAt: DateTime.parse(json['sentAt']),
+      sentAt: json['sentAt'] != null
+          ? DateTime.tryParse(json['sentAt'])
+          : null,
       isRead: json['isRead'] ?? false,
       userId: json['userId'] ?? 0,
       todoId: json['todoId'],
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'body': body,
-    'sentAt': sentAt.toIso8601String(),
-    'isRead': isRead,
-    'userId': userId,
-    'todoId': todoId,
-  };
 
   AppNotification copyWith({
     int? id,
@@ -108,4 +101,14 @@ class AppNotification {
       todoId: todoId ?? this.todoId,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'body': body,
+    'sentAt': sentAt?.toIso8601String(),
+    'isRead': isRead,
+    'userId': userId,
+    'todoId': todoId,
+  };
 }

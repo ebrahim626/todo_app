@@ -16,13 +16,13 @@ class WarningBottomSheet extends StatelessWidget {
     this.secondaryButtonText,
     this.onPrimaryButtonPressed,
     this.onSecondaryButtonPressed,
+    this.isOneButton = false,
   });
 
   final String title;
   final String subtitle;
-
+  final bool isOneButton;
   final Widget? child;
-
   final String primaryButtonText;
   final String? secondaryButtonText;
 
@@ -34,6 +34,7 @@ class WarningBottomSheet extends StatelessWidget {
     required String title,
     required String subtitle,
     Widget? child,
+    isOneButton,
     required String primaryButtonText,
     String? secondaryButtonText,
     VoidCallback? onPrimaryButtonPressed,
@@ -48,6 +49,7 @@ class WarningBottomSheet extends StatelessWidget {
         return WarningBottomSheet(
           title: title,
           subtitle: subtitle,
+          isOneButton: isOneButton,
           primaryButtonText: primaryButtonText,
           secondaryButtonText: secondaryButtonText,
           onPrimaryButtonPressed: onPrimaryButtonPressed,
@@ -67,31 +69,39 @@ class WarningBottomSheet extends StatelessWidget {
           Text(subtitle),
           if (child != null) ...[8.ph, child!],
           20.ph,
-          Row(
-            children: [
-              Expanded(
-                child: AppButton(
+          isOneButton
+              ? AppButton(
                   borderRadius: 99,
                   onTap: onPrimaryButtonPressed,
-                  buttonType: ButtonType.outlined,
+                  buttonType: ButtonType.filled,
                   text: primaryButtonText,
-                  textColor: primaryColor,
+                  textColor: Colors.white,
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      child: AppButton(
+                        borderRadius: 99,
+                        onTap: onPrimaryButtonPressed,
+                        buttonType: ButtonType.outlined,
+                        text: primaryButtonText,
+                        textColor: primaryColor,
+                      ),
+                    ),
+                    10.pw,
+                    Expanded(
+                      child: AppButton(
+                        borderRadius: 99,
+                        onTap:
+                            onSecondaryButtonPressed ??
+                            () {
+                              context.pop();
+                            },
+                        text: secondaryButtonText ?? "Cancel",
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              10.pw,
-              Expanded(
-                child: AppButton(
-                  borderRadius: 99,
-                  onTap:
-                      onSecondaryButtonPressed ??
-                      () {
-                        context.pop();
-                      },
-                  text: secondaryButtonText ?? "Cancel",
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );

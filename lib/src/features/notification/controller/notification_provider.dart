@@ -12,7 +12,6 @@ typedef NotificationNotifier =
 final notificationProvider = NotificationNotifier(NotificationProvider.new);
 
 class NotificationProvider extends AutoDisposeAsyncNotifier {
-
   int? unReadNotifications;
   final PagingController<int, AppNotification> notificationPagingController =
       PagingController(firstPageKey: 1);
@@ -20,26 +19,29 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
   @override
   FutureOr<dynamic> build() async {
     notificationPagingController.addPageRequestListener((pageKey) async {
-      await getNotifications(pageKey);
+      await getNotifications(pageKey: pageKey, pageSize: 15);
     });
   }
 
-  Future<void> getNotifications(int pageKey) async {
+  Future<void> getNotifications({required int pageKey, required int pageSize}) async {
     try {
       final repo = ref.read(notificationRepository);
-      final response = await repo.getNotifications(pageKey);
+      final response = await repo.getNotifications(pageKey: pageKey,pageSize: pageSize);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = NotificationResponse.fromJson(response.data);
         final appNotifications = data.data.notifications;
         unReadNotifications = data.data.totalUnreadCount;
-        final isLastPage = appNotifications.length < 20;
+        final isLastPage = appNotifications.length < pageSize;
 
         if (isLastPage) {
           notificationPagingController.appendLastPage(appNotifications);
-        }else {
+        } else {
           final nextPageKey = pageKey + 1;
-          notificationPagingController.appendPage(appNotifications, nextPageKey);
+          notificationPagingController.appendPage(
+            appNotifications,
+            nextPageKey,
+          );
         }
       } else {
         FlashCard.showError(errorMessage: "Failed to fetch all notifications.");
