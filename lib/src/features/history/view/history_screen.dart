@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
+import 'package:todo_app/src/features/common/view/custom_widgets/no_item_found_container.dart';
 import 'package:todo_app/src/features/common/view/divider/app_divider.dart';
 import 'package:todo_app/src/features/history/controller/history_provider.dart';
 import 'package:todo_app/src/features/home/get_task_model/response/get_task_model.dart';
@@ -24,7 +25,7 @@ class HistoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(historyProvider);
-    final notifier = ref.watch(historyProvider.notifier);
+    final notifier = ref.read(historyProvider.notifier);
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -187,243 +188,253 @@ class HistoryScreen extends ConsumerWidget {
                         color: Colors.white,
                         backgroundColor: primaryColor,
                         onRefresh: notifier.refresh,
-                        child: PagedListView(
-                          padding: const EdgeInsets.only(bottom: 85),
-                          pagingController: notifier.taskPagingController,
-                          builderDelegate: PagedChildBuilderDelegate<TodoModel>(
-                            itemBuilder: (context, item, index) => Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: notifier.getStatusColor(
-                                    item.taskStatus,
-                                  ),
+                        child: CustomScrollView(
+                          slivers: [
+                            PagedSliverList(
+                            pagingController: notifier.taskPagingController,
+                            builderDelegate: PagedChildBuilderDelegate<TodoModel>(
+                              noItemsFoundIndicatorBuilder: (context) => Align(
+                                alignment: Alignment.topCenter,
+                                child: NoItemFoundContainer(
+                                  title: "No History Available",
+                                  subTitle:
+                                  "Task history will appear here once tasks are completed or become past due. Upcoming tasks are excluded.",
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        CardStatusWidget(
-                                          statusTitle: "${item.taskType}",
-                                        ),
-                                        8.pw,
-                                        CardStatusWidget(
-                                          statusTitle:
-                                              "${TaskPriority.getLabel(item.taskPriority)}",
-                                        ),
-                                        8.pw,
-                                        CardStatusWidget(
-                                          statusTitle:
-                                              "${TaskStatus.getLabel(item.taskStatus)}",
-                                        ),
-                                        Spacer(),
-                                        GestureDetector(
-                                          onTapDown: (TapDownDetails details) {
-                                            final RenderBox overlay =
-                                                Overlay.of(
-                                                      context,
-                                                    ).context.findRenderObject()
-                                                    as RenderBox;
-                                            showMenu(
-                                              context: context,
-                                              shape: RoundedRectangleBorder(
+                              ),
+                              itemBuilder: (context, item, index) => Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: notifier.getStatusColor(
+                                      item.taskStatus,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CardStatusWidget(
+                                            statusTitle: "${item.taskType}",
+                                          ),
+                                          8.pw,
+                                          CardStatusWidget(
+                                            statusTitle:
+                                                "${TaskPriority.getLabel(item.taskPriority)}",
+                                          ),
+                                          8.pw,
+                                          CardStatusWidget(
+                                            statusTitle:
+                                                "${TaskStatus.getLabel(item.taskStatus)}",
+                                          ),
+                                          Spacer(),
+                                          GestureDetector(
+                                            onTapDown: (TapDownDetails details) {
+                                              final RenderBox overlay =
+                                                  Overlay.of(
+                                                        context,
+                                                      ).context.findRenderObject()
+                                                      as RenderBox;
+                                              showMenu(
+                                                context: context,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadiusGeometry.circular(
+                                                        12,
+                                                      ),
+                                                ),
+                                                color: const Color(
+                                                  0xffEEFAFF,
+                                                ), // menu background color
+                                                position: RelativeRect.fromRect(
+                                                  details.globalPosition &
+                                                      const Size(40, 40),
+                                                  Offset.zero & overlay.size,
+                                                ),
+                                                items: [
+                                                  PopupMenuItem<String>(
+                                                    value: 'edit',
+                                                    height: 40,
+                                                    child: ListTile(
+                                                      dense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                          ),
+                                                      title: Text("Edit"),
+                                                    ),
+                                                  ),
+                                                  if (item.taskStatus != 1)
+                                                    PopupMenuItem<String>(
+                                                      value: 'mark_as_done',
+                                                      height: 40,
+                                                      child: ListTile(
+                                                        dense: true,
+                                                        contentPadding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 12,
+                                                            ),
+                                                        title: Text(
+                                                          "Mark As Done",
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  if (item.taskStatus != 2)
+                                                    PopupMenuItem<String>(
+                                                      value: 'mark_as_closed',
+                                                      height: 40,
+                                                      child: ListTile(
+                                                        dense: true,
+                                                        contentPadding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 12,
+                                                            ),
+                                                        title: Text(
+                                                          "Mark As Closed",
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  PopupMenuItem<String>(
+                                                    value: 'delete',
+                                                    height: 40,
+                                                    child: ListTile(
+                                                      dense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                          ),
+                                                      title: Text(
+                                                        "Delete",
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ), // 👈 red delete
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ).then((value) {
+                                                if (value == 'edit') {
+                                                  // handle edit
+                                                  context.push(
+                                                    AppRoutes.addTaskRoute,
+                                                    extra: item,
+                                                  );
+                                                } else if (value ==
+                                                    'mark_as_done') {
+                                                  // handle change status
+                                                  notifier.updateStatus(
+                                                    context,
+                                                    task: item,
+                                                    taskStatus: 1,
+                                                  );
+                                                } else if (value ==
+                                                    'mark_as_closed') {
+                                                  // handle change status
+                                                  notifier.updateStatus(
+                                                    context,
+                                                    task: item,
+                                                    taskStatus: 2,
+                                                  );
+                                                } else if (value == 'delete') {
+                                                  // handle delete
+                                                  WarningBottomSheet.show(
+                                                    context,
+                                                    title: "Delete this task?",
+                                                    subtitle:
+                                                        "This action cannot be undone. The task will be permanently removed.",
+                                                    primaryButtonText: "Delete",
+                                                    onPrimaryButtonPressed: () {
+                                                      notifier.deleteTask(
+                                                        context,
+                                                        taskId: item.id,
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              });
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(3),
+                                              decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadiusGeometry.circular(
-                                                      12,
-                                                    ),
+                                                    BorderRadius.circular(99),
+                                                color: Colors.white,
                                               ),
-                                              color: const Color(
-                                                0xffEEFAFF,
-                                              ), // menu background color
-                                              position: RelativeRect.fromRect(
-                                                details.globalPosition &
-                                                    const Size(40, 40),
-                                                Offset.zero & overlay.size,
-                                              ),
-                                              items: [
-                                                PopupMenuItem<String>(
-                                                  value: 'edit',
-                                                  height: 40,
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 12,
-                                                        ),
-                                                    title: Text("Edit"),
-                                                  ),
+                                              child: Icon(
+                                                Icons.more_vert,
+                                                size: 18,
+                                                color: notifier.getStatusColor(
+                                                  item.taskStatus,
                                                 ),
-                                                if (item.taskStatus != 1)
-                                                  PopupMenuItem<String>(
-                                                    value: 'mark_as_done',
-                                                    height: 40,
-                                                    child: ListTile(
-                                                      dense: true,
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                            horizontal: 12,
-                                                          ),
-                                                      title: Text(
-                                                        "Mark As Done",
-                                                      ),
-                                                    ),
-                                                  ),
-                                                if (item.taskStatus != 2)
-                                                  PopupMenuItem<String>(
-                                                    value: 'mark_as_closed',
-                                                    height: 40,
-                                                    child: ListTile(
-                                                      dense: true,
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                            horizontal: 12,
-                                                          ),
-                                                      title: Text(
-                                                        "Mark As Closed",
-                                                      ),
-                                                    ),
-                                                  ),
-                                                PopupMenuItem<String>(
-                                                  value: 'delete',
-                                                  height: 40,
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 12,
-                                                        ),
-                                                    title: Text(
-                                                      "Delete",
-                                                      style: TextStyle(
-                                                        color: Colors.red,
-                                                      ), // 👈 red delete
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ).then((value) {
-                                              if (value == 'edit') {
-                                                // handle edit
-                                                context.push(
-                                                  AppRoutes.addTaskRoute,
-                                                  extra: item,
-                                                );
-                                              } else if (value ==
-                                                  'mark_as_done') {
-                                                // handle change status
-                                                notifier.updateStatus(
-                                                  context,
-                                                  task: item,
-                                                  taskStatus: 1,
-                                                );
-                                              } else if (value ==
-                                                  'mark_as_closed') {
-                                                // handle change status
-                                                notifier.updateStatus(
-                                                  context,
-                                                  task: item,
-                                                  taskStatus: 2,
-                                                );
-                                              } else if (value == 'delete') {
-                                                // handle delete
-                                                WarningBottomSheet.show(
-                                                  context,
-                                                  title: "Delete this task?",
-                                                  subtitle:
-                                                      "This action cannot be undone. The task will be permanently removed.",
-                                                  primaryButtonText: "Delete",
-                                                  onPrimaryButtonPressed: () {
-                                                    notifier.deleteTask(
-                                                      context,
-                                                      taskId: item.id,
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(99),
-                                              color: Colors.white,
-                                            ),
-                                            child: Icon(
-                                              Icons.more_vert,
-                                              size: 18,
-                                              color: notifier.getStatusColor(
-                                                item.taskStatus,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "${item.title}",
-                                      style: context.text.titleSmall?.copyWith(
-                                        color: Colors.white,
+                                        ],
                                       ),
-                                    ),
-                                    if (item.description.trim().isNotEmpty) ...[
-                                      4.ph,
                                       Text(
-                                        item.description,
-                                        style: context.text.bodySmall?.copyWith(
+                                        "${item.title}",
+                                        style: context.text.titleSmall?.copyWith(
                                           color: Colors.white,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      if (item.description.trim().isNotEmpty) ...[
+                                        4.ph,
+                                        Text(
+                                          item.description,
+                                          style: context.text.bodySmall?.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                      4.ph,
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${DateFormatter.formatDate(item.dueDate ?? DateTime.now())}",
+                                            style: context.text.bodySmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            "Time: ${DateTimeFormatter.time(item.dueDate)}",
+                                            style: context.text.bodySmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
+                                          // Spacer(),
+                                          // Container(
+                                          //   padding: EdgeInsets.symmetric(
+                                          //     horizontal: 8,
+                                          //     vertical: 4,
+                                          //   ),
+                                          //   decoration: BoxDecoration(
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(8),
+                                          //     color: Colors.white,
+                                          //   ),
+                                          //   child: Text(
+                                          //     "View Details",
+                                          //     style:
+                                          //         context.text.bodySmall?.copyWith(
+                                          //       color: primaryColor,
+                                          //       fontWeight: FontWeight.w500,
+                                          //     ),
+                                          //   ),
+                                          // )
+                                        ],
                                       ),
                                     ],
-                                    4.ph,
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "${DateFormatter.formatDate(item.dueDate ?? DateTime.now())}",
-                                          style: context.text.bodySmall
-                                              ?.copyWith(color: Colors.white),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          "Time: ${DateTimeFormatter.time(item.dueDate)}",
-                                          style: context.text.bodySmall
-                                              ?.copyWith(color: Colors.white),
-                                        ),
-                                        // Spacer(),
-                                        // Container(
-                                        //   padding: EdgeInsets.symmetric(
-                                        //     horizontal: 8,
-                                        //     vertical: 4,
-                                        //   ),
-                                        //   decoration: BoxDecoration(
-                                        //     borderRadius:
-                                        //         BorderRadius.circular(8),
-                                        //     color: Colors.white,
-                                        //   ),
-                                        //   child: Text(
-                                        //     "View Details",
-                                        //     style:
-                                        //         context.text.bodySmall?.copyWith(
-                                        //       color: primaryColor,
-                                        //       fontWeight: FontWeight.w500,
-                                        //     ),
-                                        //   ),
-                                        // )
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
+                              firstPageErrorIndicatorBuilder: (context) =>
+                                  Container(height: 55, child: Text("hello")),
                             ),
-                            firstPageErrorIndicatorBuilder: (context) =>
-                                Container(height: 55, child: Text("hello")),
-                          ),
+                          ),]
                         ),
                       ),
                     ),

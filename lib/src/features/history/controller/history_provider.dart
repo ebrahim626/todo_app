@@ -31,14 +31,12 @@ class HistoryProvider extends AsyncNotifier {
   List<String> taskStatusList = ['Done', 'Closed', 'Pending', 'Upcoming'];
   final defaultStatusList = ['Done', 'Closed', 'Pending', 'Upcoming'];
 
+
   @override
   FutureOr<dynamic> build() async {
-    log("BUILD CALLED");
-
     ref.onDispose(() => taskPagingController.dispose());
 
     taskPagingController.addPageRequestListener((pageKey) async {
-      log("PAGE REQUEST: $pageKey");
       if (selectedTaskStatus != null || selectedTaskPriority != null) {
         await viewByStatus(page: pageKey, taskStatus: selectedTaskStatus, taskPriority: selectedTaskPriority);
       } else {
