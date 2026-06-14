@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/features/history/repository/history_repository.dart';
+import 'package:todo_app/src/features/home/view/components/task_priority.dart';
 import 'package:todo_app/src/features/home/view/components/task_status.dart';
 import '../../../core/utils/theme/theme.dart';
 import '../../../shared/toast/toast.dart';
@@ -22,7 +23,11 @@ class HistoryProvider extends AsyncNotifier {
   int? selectedTaskStatus;
   String? dropDownLabel;
   int? selectedTaskPriority;
+  String? dropDownPriorityLabel;
   bool isStatusMenuOpen = false;
+  bool isPriorityMenuOpen = false;
+  List<String> priorityList = ['Must Do', 'Should Do', 'Can Wait'];
+  final defaultPriorityList = ['Must Do', 'Should Do', 'Can Wait'];
   List<String> taskStatusList = ['Done', 'Closed', 'Pending', 'Upcoming'];
   final defaultStatusList = ['Done', 'Closed', 'Pending', 'Upcoming'];
 
@@ -34,8 +39,8 @@ class HistoryProvider extends AsyncNotifier {
 
     taskPagingController.addPageRequestListener((pageKey) async {
       log("PAGE REQUEST: $pageKey");
-      if (selectedTaskStatus != null) {
-        await viewByStatus(page: pageKey, taskStatus: selectedTaskStatus!);
+      if (selectedTaskStatus != null || selectedTaskPriority != null) {
+        await viewByStatus(page: pageKey, taskStatus: selectedTaskStatus, taskPriority: selectedTaskPriority);
       } else {
         await getTasksHistory(page: pageKey);
       }
@@ -44,6 +49,10 @@ class HistoryProvider extends AsyncNotifier {
 
   void setStatusMenuState(bool value) {
     isStatusMenuOpen = value;
+    ref.notifyListeners();
+  }
+  void setPriorityMenuState(bool value) {
+    isPriorityMenuOpen = value;
     ref.notifyListeners();
   }
 
@@ -179,7 +188,8 @@ class HistoryProvider extends AsyncNotifier {
   Future<void> viewByStatus({
     required int page,
     int pageSize = 10,
-    required int taskStatus,
+    int? taskStatus,
+    int? taskPriority
   }) async {
     try {
       final repo = ref.read(historyRepository);
@@ -187,6 +197,7 @@ class HistoryProvider extends AsyncNotifier {
         pageSize: pageSize,
         page: page,
         taskStatus: taskStatus,
+        taskPriority: taskPriority,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = TodoListResponse.fromJson(response.data);
@@ -220,6 +231,25 @@ class HistoryProvider extends AsyncNotifier {
     }
     isStatusMenuOpen = false;
     selectedTaskStatus = TaskStatus.getValue(label);
+
+    ref.notifyListeners();
+    taskPagingController.itemList = [];
+    taskPagingController.refresh();
+  }
+
+  Future<void> filterByPriority(String label) async {
+    if (label == 'All') {
+      priorityList = List.from(defaultPriorityList);
+      dropDownPriorityLabel = null;
+    } else {
+      dropDownPriorityLabel = label;
+
+      priorityList = List.from(defaultPriorityList);
+      priorityList.remove(label);
+      priorityList.insert(0, 'All');
+    }
+    isPriorityMenuOpen = false;
+    selectedTaskPriority = TaskPriority.getValue(label);
 
     ref.notifyListeners();
     taskPagingController.itemList = [];

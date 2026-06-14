@@ -138,20 +138,42 @@ class HistoryScreen extends ConsumerWidget {
                           ),
                         ),
                         10.pw,
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
+                        PopupMenuButton<String>(
+                          onOpened: () => notifier.setPriorityMenuState(true),
+                          onCanceled: () => notifier.setPriorityMenuState(false),
+                          offset: const Offset(0, 36),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(99),
-                            border: Border.all(color: Colors.black54),
-                          ),
-                          child: Row(
-                            children: [
-                              Text("Priority"),
-                              Icon(Icons.keyboard_arrow_down_outlined),
-                            ],
+                          onSelected: (value) => notifier.filterByPriority(value),
+                          itemBuilder: (context) =>
+                              notifier.priorityList
+                                  .map(
+                                    (s) =>
+                                    PopupMenuItem(value: s, child: Text(s)),
+                              )
+                                  .toList(),
+                          color: backgroundColor,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(99),
+                              border: Border.all(color: Colors.black54),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(notifier.dropDownPriorityLabel ?? "Priority"),
+                                Icon(
+                                  notifier.isPriorityMenuOpen
+                                      ? Icons.keyboard_arrow_up_outlined
+                                      : Icons.keyboard_arrow_down_outlined,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Spacer(),

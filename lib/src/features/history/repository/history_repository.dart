@@ -15,6 +15,7 @@ class HistoryRepository {
   Future<ApiResponse<dynamic>> getHistoryTasks({
     required int pageSize,
     required int page,
+    int? taskPriority,
     int? taskStatus,
   }) async {
     return await apiClient.get(
@@ -27,6 +28,8 @@ class HistoryRepository {
         "PageNumber" : page,
         if(taskStatus != null)
         "TaskStatus" : taskStatus.toString(),
+        if(taskPriority != null)
+        "TaskPriority" : taskPriority.toString(),
       },
     );
   }

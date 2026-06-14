@@ -10,12 +10,16 @@ class TaskPriority {
   };
 
   static int? getValue(String label) {
-    return labels.entries
-        .firstWhere(
-          (e) => e.value == label,
-      orElse: () => const MapEntry(0, ''),
-    )
-        .key;
+      try{
+       return labels.entries
+            .firstWhere(
+              (e) => e.value == label,
+        )
+            .key;
+      }catch(_) {
+        return null;
+      }
+
   }
 
   static String getLabel(int value) {
