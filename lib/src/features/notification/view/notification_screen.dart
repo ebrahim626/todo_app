@@ -54,8 +54,8 @@ class NotificationScreen extends ConsumerWidget {
           children: [
             hasData
                 ? Column(
-                  children: [
-                    Container(
+                    children: [
+                      Container(
                         padding: EdgeInsetsGeometry.symmetric(
                           vertical: 6,
                           horizontal: 12,
@@ -71,86 +71,90 @@ class NotificationScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-                    12.ph,
-                  ],
-                )
+                      12.ph,
+                    ],
+                  )
                 : const SizedBox.shrink(),
             Expanded(
-              child: PagedListView(
-                padding: const EdgeInsets.only(bottom: 85),
-                pagingController: notifier.notificationPagingController,
-                builderDelegate: PagedChildBuilderDelegate<AppNotification>(
-                  noItemsFoundIndicatorBuilder: (context) => Align(
-                    alignment: Alignment.topCenter,
-                    child: NoItemFoundContainer(
-                      title: "No notifications at this moment.",
-                      subTitle:
-                          "New notifications will appear here. Unread items will be highlighted with a count on the notification icon.",
-                    ),
-                  ),
-                  itemBuilder: (context, item, index) => Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: InkWell(
-                      onTap: () {
-                        WarningBottomSheet.show(
-                          context,
-                          title: "Mark this notification as read?",
-                          subtitle: "This action cannot be undone.",
-                          primaryButtonText: "Mark as read",
-                          onPrimaryButtonPressed: () {},
-                          isOneButton: true,
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: item.isRead ? pendingColor : primaryColor,
+              child: CustomScrollView(
+                slivers: [
+                  PagedSliverList(
+                    pagingController: notifier.notificationPagingController,
+                    builderDelegate: PagedChildBuilderDelegate<AppNotification>(
+                      noItemsFoundIndicatorBuilder: (context) => Align(
+                        alignment: Alignment.topCenter,
+                        child: NoItemFoundContainer(
+                          title: "No notifications at this moment.",
+                          subTitle:
+                              "New notifications will appear here. Unread items will be highlighted with a count on the notification icon.",
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: backgroundColor,
-                              ),
-                              child: Text(
-                                "${item.title}",
-                                style: context.text.titleSmall?.copyWith(
-                                  color: primaryColor,
-                                ),
-                              ),
+                      ),
+                      itemBuilder: (context, item, index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: InkWell(
+                          onTap: () {
+                            WarningBottomSheet.show(
+                              context,
+                              title: "Mark this notification as read?",
+                              subtitle: "This action cannot be undone.",
+                              primaryButtonText: "Mark as read",
+                              onPrimaryButtonPressed: () {},
+                              isOneButton: true,
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: item.isRead ? pendingColor : primaryColor,
                             ),
-                            6.ph,
-                            Text(
-                              "${item.body}",
-                              style: context.text.titleSmall?.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Spacer(),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: backgroundColor,
+                                  ),
+                                  child: Text(
+                                    "${item.title}",
+                                    style: context.text.titleSmall?.copyWith(
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                ),
+                                6.ph,
                                 Text(
-                                  "${DateTimeFormatter.timeAgo(item.sentAt)}",
+                                  "${item.body}",
                                   style: context.text.titleSmall?.copyWith(
                                     color: Colors.white,
                                   ),
                                 ),
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    Text(
+                                      "${DateTimeFormatter.timeAgo(item.sentAt)}",
+                                      style: context.text.titleSmall?.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                  85.ph,
+                ],
               ),
             ),
           ],
