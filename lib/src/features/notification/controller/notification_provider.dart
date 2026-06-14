@@ -13,6 +13,7 @@ final notificationProvider = NotificationNotifier(NotificationProvider.new);
 
 class NotificationProvider extends AutoDisposeAsyncNotifier {
   int? unReadNotifications;
+  int? notifications;
   final PagingController<int, AppNotification> notificationPagingController =
       PagingController(firstPageKey: 1);
 
@@ -31,6 +32,7 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = NotificationResponse.fromJson(response.data);
         final appNotifications = data.data.notifications;
+        notifications = appNotifications.length;
         unReadNotifications = data.data.totalUnreadCount;
         final isLastPage = appNotifications.length < pageSize;
 
