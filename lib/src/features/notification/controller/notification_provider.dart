@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/notification/notification_model/response/Notification_response.dart';
 import 'package:todo_app/src/features/notification/repository/notification_repository.dart';
 import '../../../shared/toast/toast.dart';
@@ -66,7 +69,9 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log("Notification marked as read successfully");
+        ref.read(homeControllerProvider.notifier).getAllTasks();
         FlashCard.showSuccess(message: response.data["message"]);
+
       } else {
         FlashCard.showError(errorMessage: "Failed to marked notifications as read");
       }
@@ -77,6 +82,20 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
       );
     }finally {
       isLoading = false;
+    }
+  }
+
+  Future<void> handleBack(
+      BuildContext context,
+      NotificationProvider notifier,
+      int unreadCount,
+      ) async {
+    if (unreadCount > 0) {
+      await notifier.markAsRead();
+    }
+
+    if (context.mounted) {
+      context.pop();
     }
   }
 

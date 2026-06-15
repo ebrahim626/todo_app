@@ -67,15 +67,17 @@ class AddTaskProvider extends AutoDisposeFamilyAsyncNotifier<void, TodoModel?> {
       taskDescriptionController.text = arg.description;
       selectedTaskType = arg.taskType;
       selectedTaskPriority = TaskPriority.getLabel(arg.taskPriority);
-      selectedDueDate = arg.dueDate;
-      selectedReminderDate = arg.reminderDate;
+      selectedDueDate = arg.dueDate?.toLocal();
+      selectedReminderDate = arg.reminderDate?.toLocal();
       if (selectedDueDate != null) {
+        final local = selectedDueDate!.toLocal();
         selectedDueTime =
-            TimeOfDay(hour: selectedDueDate!.hour, minute: selectedDueDate!.minute);
+            TimeOfDay(hour: local.hour, minute: local.minute);
       }
       if (selectedReminderDate != null) {
+        final local = selectedReminderDate!.toLocal();
         selectedReminderTime = TimeOfDay(
-            hour: selectedReminderDate!.hour, minute: selectedReminderDate!.minute);
+            hour: local.hour, minute: local.minute);
       }
     }
 
