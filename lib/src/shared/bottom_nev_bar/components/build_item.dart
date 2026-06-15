@@ -35,7 +35,7 @@ class BottomNavUtils {
           if (notificationCount > 0)
             Positioned(
               right: -4,
-              top: -2,
+              top: -4,
               child: Container(
                 padding: const EdgeInsets.all(4),
                 constraints: const BoxConstraints(
@@ -43,7 +43,7 @@ class BottomNavUtils {
                   minHeight: 18,
                 ),
                 decoration: const BoxDecoration(
-                  color: Colors.red,
+                  color: Color(0xFFED6B6B),
                   shape: BoxShape.circle,
                 ),
                 child: Text(

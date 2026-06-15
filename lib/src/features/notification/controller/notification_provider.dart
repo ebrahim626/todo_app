@@ -12,8 +12,7 @@ typedef NotificationNotifier =
 final notificationProvider = NotificationNotifier(NotificationProvider.new);
 
 class NotificationProvider extends AutoDisposeAsyncNotifier {
-  int? unReadNotifications;
-  int? notifications;
+  bool isLoading = false;
   final PagingController<int, AppNotification> notificationPagingController =
       PagingController(firstPageKey: 1);
 
@@ -24,6 +23,11 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
     });
   }
 
+  bool get hasData {
+    final items = notificationPagingController.itemList;
+    return items != null && items.isNotEmpty;
+  }
+
   Future<void> getNotifications({required int pageKey, required int pageSize}) async {
     try {
       final repo = ref.read(notificationRepository);
@@ -32,8 +36,6 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = NotificationResponse.fromJson(response.data);
         final appNotifications = data.data.notifications;
-        notifications = appNotifications.length;
-        unReadNotifications = data.data.totalUnreadCount;
         final isLastPage = appNotifications.length < pageSize;
 
         if (isLastPage) {
@@ -55,4 +57,27 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
       );
     }
   }
+
+  Future<void> markAsRead() async {
+    try {
+      isLoading = true;
+      final repo = ref.read(notificationRepository);
+      final response = await repo.markAsRead();
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Notification marked as read successfully");
+        FlashCard.showSuccess(message: response.data["message"]);
+      } else {
+        FlashCard.showError(errorMessage: "Failed to marked notifications as read");
+      }
+    } catch (e) {
+      log("Error mark notifications: $e");
+      FlashCard.showError(
+        errorMessage: "An error occurred while marking notifications.",
+      );
+    }finally {
+      isLoading = false;
+    }
+  }
+
 }

@@ -20,8 +20,16 @@ class NotificationRepository {
       query: {
         "pageNumber" : pageKey,
         "pageSize" : pageSize ?? 15,
-
       }
     );
   }
+
+  Future<ApiResponse<dynamic>> markAsRead() async {
+    return await apiClient.post(
+        apiType: APIType.private,
+        tokenType: TokenType.bearerToken,
+        path: ApiEndpoints.markAsReadEndpoint,
+    );
+  }
+
 }

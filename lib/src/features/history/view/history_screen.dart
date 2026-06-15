@@ -12,6 +12,7 @@ import '../../../core/router/app_routers.dart';
 import '../../../core/service/time_formatter.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../../core/utils/theme/theme.dart';
+import '../../../shared/bottom_nev_bar/bottom_nev_bar.dart';
 import '../../common/view/bottom_sheet/warning_bottom_sheet.dart';
 import '../../home/view/components/card_status_widget.dart';
 import '../../home/view/components/task_priority.dart';
@@ -26,6 +27,7 @@ class HistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(historyProvider);
     final notifier = ref.read(historyProvider.notifier);
+    final unreadCount = ref.watch(unreadCountProvider); // 👈 reactive, persists across tabs
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -59,6 +61,7 @@ class HistoryScreen extends ConsumerWidget {
                       clipBehavior: Clip.none,
                       children: [
                         Icon(Icons.notifications_none_outlined, size: 32),
+                        if(unreadCount != 0)
                         Positioned(
                           top: -4,
                           right: -4,
@@ -73,7 +76,9 @@ class HistoryScreen extends ConsumerWidget {
                               minHeight: 18,
                             ),
                             child: Text(
-                              '12',
+                              unreadCount > 99
+                                  ? '99+'
+                                  : unreadCount.toString(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,

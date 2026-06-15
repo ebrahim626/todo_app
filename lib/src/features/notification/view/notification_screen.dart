@@ -20,8 +20,6 @@ class NotificationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(notificationProvider);
     final notifier = ref.read(notificationProvider.notifier);
-    final hasData =
-        notifier.notifications != null || notifier.notifications != 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -30,7 +28,10 @@ class NotificationScreen extends ConsumerWidget {
         leading: IconButton(
           padding: EdgeInsets.only(left: 24),
           icon: Icon(Icons.arrow_back_ios_new_sharp, size: 32),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            notifier.markAsRead();
+            Navigator.of(context).pop();
+          },
         ),
 
         centerTitle: true,
@@ -52,29 +53,6 @@ class NotificationScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            hasData
-                ? Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsetsGeometry.symmetric(
-                          vertical: 6,
-                          horizontal: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(99),
-                          color: primaryColor,
-                        ),
-                        child: Text(
-                          "Mark as read all",
-                          style: context.text.titleSmall?.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      12.ph,
-                    ],
-                  )
-                : const SizedBox.shrink(),
             Expanded(
               child: CustomScrollView(
                 slivers: [
@@ -153,7 +131,9 @@ class NotificationScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  85.ph,
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: 85),
+                  ),
                 ],
               ),
             ),

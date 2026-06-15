@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hugeicons/hugeicons.dart';
-import 'package:todo_app/src/core/utils/theme/theme.dart';
-
 import '../../core/router/app_routers.dart';
 import 'components/bottom_nav_container.dart';
 import 'components/build_item.dart';
 
-class BottomNavBar extends StatelessWidget {
+final unreadCountProvider = StateProvider<int>((ref) => 0);
+
+class BottomNavBar extends ConsumerWidget {
   const BottomNavBar({super.key, required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final int currentIndex = _getSelectedIndex(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadCount = ref.watch(unreadCountProvider);
 
     return Scaffold(
       body: child,
@@ -22,7 +22,7 @@ class BottomNavBar extends StatelessWidget {
       bottomNavigationBar: BottomNavContainer(
         currentIndex: _getSelectedIndex(context, ),
         onTap: (index) => _onItemTapped(context, index),
-        navItems: _buildNavItems(context),
+        navItems: _buildNavItems(context,unreadCount),
       ),
     );
   }
@@ -41,7 +41,7 @@ class BottomNavBar extends StatelessWidget {
   // ),
   //
 
-  List<BottomNavigationBarItem> _buildNavItems(BuildContext context) {
+  List<BottomNavigationBarItem> _buildNavItems(BuildContext context, int unreadCount) {
       return [
         BottomNavUtils.buildItem(
           icon: Icons.home,
@@ -50,7 +50,7 @@ class BottomNavBar extends StatelessWidget {
         ),
         BottomNavUtils.notificationItem(
           label: 'History',
-          notificationCount: 5,
+          notificationCount: unreadCount,
         ),
     ];
   }

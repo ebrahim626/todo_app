@@ -1,5 +1,3 @@
-
-
 class TodoListResponse {
   final bool isSuccess;
   final String message;
@@ -20,11 +18,7 @@ class TodoListResponse {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'isSuccess': isSuccess,
-      'message': message,
-      'data': data.toJson(),
-    };
+    return {'isSuccess': isSuccess, 'message': message, 'data': data.toJson()};
   }
 }
 
@@ -33,6 +27,7 @@ class TodoPaginationData {
   final int pageSize;
   final int totalPages;
   final int totalCount;
+  final int totalUnreadCount;
   final List<TodoModel> data;
 
   TodoPaginationData({
@@ -41,6 +36,7 @@ class TodoPaginationData {
     required this.totalPages,
     required this.totalCount,
     required this.data,
+    required this.totalUnreadCount,
   });
 
   factory TodoPaginationData.fromJson(Map<String, dynamic> json) {
@@ -49,6 +45,7 @@ class TodoPaginationData {
       pageSize: json['pageSize'] ?? 0,
       totalPages: json['totalPages'] ?? 0,
       totalCount: json['totalCount'] ?? 0,
+      totalUnreadCount: json['totalUnreadCount'] ?? 0,
       data: (json['data'] as List<dynamic>? ?? [])
           .map((e) => TodoModel.fromJson(e))
           .toList(),
@@ -129,9 +126,7 @@ class TodoModel {
       taskStatus: json['taskStatus'] ?? 0,
       taskPriority: json['taskPriority'] ?? 0,
       taskType: json['taskType'] ?? '',
-      dueDate: json['dueDate'] != null
-          ? DateTime.parse(json['dueDate'])
-          : null,
+      dueDate: json['dueDate'] != null ? DateTime.parse(json['dueDate']) : null,
       reminderDate: json['reminderDate'] != null
           ? DateTime.parse(json['reminderDate'])
           : null,

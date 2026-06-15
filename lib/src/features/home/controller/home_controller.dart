@@ -11,6 +11,7 @@ import 'package:todo_app/src/features/home/get_task_model/response/get_task_mode
 import 'package:todo_app/src/features/home/repository/home_repository.dart';
 import 'package:todo_app/src/shared/toast/toast.dart';
 import '../../../core/utils/theme/theme.dart';
+import '../../../shared/bottom_nev_bar/bottom_nev_bar.dart';
 import '../../add_task/model/request/create_task_request_model.dart';
 import '../../add_task/repository/add_task_repository.dart';
 
@@ -135,6 +136,9 @@ class HomeController extends AutoDisposeAsyncNotifier {
       if (allResponse.statusCode == 200) {
         final allData = TodoListResponse.fromJson(allResponse.data);
         allTodoTasks = allData.data.data;
+        final totalUnreadCount = allData.data.totalUnreadCount;
+        log("totalUnreadCount : $totalUnreadCount");
+        ref.read(unreadCountProvider.notifier).state = totalUnreadCount ?? 2;
       } else {
         FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
       }
