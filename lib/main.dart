@@ -6,6 +6,8 @@ import 'package:hive_ce_flutter/adapters.dart';
 import 'package:todo_app/src/core/config/constant/app_constants.dart';
 import 'package:todo_app/src/core/config/size/size.dart';
 import 'package:todo_app/src/core/router/go_router.export.dart';
+import 'package:todo_app/src/core/service/firebase_messaging_service.dart';
+import 'package:todo_app/src/core/service/notification_service.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,9 +22,15 @@ Future<void> main() async {
 
   // Hive service
   await Hive.initFlutter();
-
-  //await Hive.openBox<PromotionPage>(AppConstants.wishListKey);
   await Hive.openBox<dynamic>(AppConstants.hiveKey);
+
+  //Local Notifications
+  final localNotificationService = LocalNotificationsService.instance();
+  await localNotificationService.init();
+
+  // Firebase Messaging (Depends on notifications service)
+  final firebaseMessagingService = FirebaseMessagingService.instance();
+  firebaseMessagingService.init(localNotificationsService: localNotificationService);
 
   await ScreenUtil.ensureScreenSize();
 
