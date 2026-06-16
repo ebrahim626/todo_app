@@ -21,6 +21,7 @@ typedef HomeControllerProvider =
 final homeControllerProvider = HomeControllerProvider(HomeController.new);
 
 class HomeController extends AutoDisposeAsyncNotifier {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   List<TodoModel>? todoTasks;
   List<TodoModel>? allTodoTasks;
   DateTime selectedDate = DateTime.now();
@@ -138,7 +139,7 @@ class HomeController extends AutoDisposeAsyncNotifier {
         allTodoTasks = allData.data.data;
         final totalUnreadCount = allData.data.totalUnreadCount;
         log("totalUnreadCount : $totalUnreadCount");
-        ref.read(unreadCountProvider.notifier).state = totalUnreadCount ?? 2;
+        ref.read(unreadCountProvider.notifier).state = totalUnreadCount;
       } else {
         FlashCard.showError(errorMessage: "Failed to fetch all tasks.");
       }

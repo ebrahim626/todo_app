@@ -12,6 +12,7 @@ import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
 import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
 import 'package:todo_app/src/features/home/view/components/task_status.dart';
+import 'package:todo_app/src/features/menu_drawer/view/school_menu.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../common/view/divider/app_divider.dart';
@@ -29,6 +30,8 @@ class HomeScreen extends ConsumerWidget {
     final tasks = ref.watch(homeControllerProvider.notifier).todoTasks;
 
     return Scaffold(
+      key: notifier.scaffoldKey,
+      drawer: SchoolMenuDrawer(),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
           bottom: 75,
@@ -61,8 +64,7 @@ class HomeScreen extends ConsumerWidget {
                 Spacer(),
                 IconButton(
                   onPressed: () {
-                    // Implement menu action here
-                    notifier.logOut(context);
+                    notifier.scaffoldKey.currentState?.openDrawer();
                   },
                   icon: Icon(Icons.menu, size: 32),
                   padding: EdgeInsets.zero,
