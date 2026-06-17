@@ -49,16 +49,17 @@ class SchoolMenuDrawer extends ConsumerWidget {
             // Menu Schedule List
             MenuItem(
               isSelected: false,
-              icon: Icons.arrow_back_ios_new_sharp,
+              icon: Icons.history,
               title: "History",
               onTap: () {
 
               },
             ),
+
             // Menu Schedule List
             MenuItem(
               isSelected: false,
-              icon: Icons.arrow_back_ios_new_sharp,
+              icon: Icons.manage_accounts_outlined,
               title: "Profile",
               onTap: () {
 
