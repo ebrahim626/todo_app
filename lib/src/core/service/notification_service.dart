@@ -17,9 +17,12 @@ class LocalNotificationsService {
   late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   //Android-specific initialization settings using app launcher icon
-  final _androidInitializationSettings = const AndroidInitializationSettings(
-    '@drawable/ic_notification',
-  );
+  // final _androidInitializationSettings = const AndroidInitializationSettings(
+  //   '@drawable/ic_notification',
+  // );
+
+ //using default icon
+  final _androidInitializationSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
 
   //iOS-specific initialization settings with permission requests
   final _iosInitializationSettings = const DarwinInitializationSettings(
@@ -97,7 +100,7 @@ class LocalNotificationsService {
       channelDescription: _androidChannel.description,
       importance: Importance.max,
       priority: Priority.high,
-      sound: const RawResourceAndroidNotificationSound('notification_sound'),
+      // sound: const RawResourceAndroidNotificationSound('notification_sound'),
     );
 
     // iOS-specific notification details
