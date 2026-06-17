@@ -40,7 +40,7 @@ class SchoolMenuDrawer extends ConsumerWidget {
             MenuItem(
               isSelected: false,
               icon: Icons.arrow_back_ios_new_sharp,
-              title: "All Enrollment",
+              title: "Task Calender",
               onTap: () {
 
               },
@@ -50,7 +50,7 @@ class SchoolMenuDrawer extends ConsumerWidget {
             MenuItem(
               isSelected: false,
               icon: Icons.arrow_back_ios_new_sharp,
-              title: "All Enrollment",
+              title: "History",
               onTap: () {
 
               },
@@ -59,27 +59,7 @@ class SchoolMenuDrawer extends ConsumerWidget {
             MenuItem(
               isSelected: false,
               icon: Icons.arrow_back_ios_new_sharp,
-              title: "All Enrollment",
-              onTap: () {
-
-              },
-            ),
-
-            // Menu Home
-            MenuItem(
-              isSelected: false,
-              icon: Icons.arrow_back_ios_new_sharp,
-              title: "All Enrollment",
-              onTap: () {
-
-              },
-            ),
-
-            // Menu Instructor List
-            MenuItem(
-              isSelected: false,
-              icon: Icons.arrow_back_ios_new_sharp,
-              title: "All Enrollment",
+              title: "Profile",
               onTap: () {
 
               },
@@ -98,6 +78,7 @@ class SchoolMenuDrawer extends ConsumerWidget {
                   },
                 );
               },
+
               leading: Icon(Icons.logout, size: 24),
               title: Text(
                 "Logout",
