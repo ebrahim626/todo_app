@@ -19,7 +19,7 @@ class MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: isSelected ? Color(0xffFFF2F6) : Colors.transparent,
+      tileColor: isSelected ? Color(0xffe6f4f4) : Colors.transparent,
       shape: const RoundedRectangleBorder(),
       onTap: onTap,
       leading: Icon(
