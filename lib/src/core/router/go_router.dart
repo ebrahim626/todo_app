@@ -42,6 +42,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, __) => const NotificationScreen(),
       ),
 
+      GoRoute(
+        path: AppRoutes.profile_screen,
+        name: ProfileScreen.name,
+        builder: (_, __) => const ProfileScreen(),
+      ),
+
 
       // shell route for bottom navigation bar
       ShellRoute(

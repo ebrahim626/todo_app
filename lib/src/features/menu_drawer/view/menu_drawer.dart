@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/src/core/router/app_routers.dart';
+import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/menu_drawer/controller/menu_drawer_controller.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../../core/utils/extensions/gap.dart';
@@ -9,7 +11,9 @@ import '../../common/view/buttom/custom_rectangular_button.dart';
 import '../../common/view/menu/menu_item.dart';
 
 class MenuDrawer extends ConsumerWidget {
-  const MenuDrawer({super.key});
+  const MenuDrawer({super.key, required this.currentScreen});
+
+  final String currentScreen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,26 +44,46 @@ class MenuDrawer extends ConsumerWidget {
 
             // Menu Appointments
             MenuItem(
-              isSelected: false,
+              isSelected: currentScreen == "Home" ? true : notifier.selectedMenu == Menu.taskCalender,
               icon: Icons.calendar_today_outlined,
               title: "Task Calender",
-              onTap: () {},
+              onTap: () {
+                if (currentScreen == "Home"){
+                  context.pop();
+                  return;
+                }
+                notifier.onMenuTap(Menu.taskCalender);
+                context.go(AppRoutes.homeRoute);
+                context.pop();
+              },
             ),
 
             // Menu Schedule List
             MenuItem(
-              isSelected: false,
+              isSelected: currentScreen == "History" ? true : false,
               icon: Icons.history,
               title: "History",
-              onTap: () {},
+              onTap: () {
+                if (currentScreen == "History"){
+                  context.pop();
+                  return;
+                }
+                notifier.onMenuTap(Menu.history);
+                context.go(AppRoutes.historyRoute);
+                context.pop();
+              },
             ),
 
             // Menu Schedule List
             MenuItem(
-              isSelected: false,
+              isSelected:  false,
               icon: Icons.manage_accounts_outlined,
               title: "Profile",
-              onTap: () {},
+              onTap: () {
+                context.pop();
+                notifier.onMenuTap(Menu.profile);
+                context.push(AppRoutes.profile_screen);
+              },
             ),
 
             ListTile(

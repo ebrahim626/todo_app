@@ -31,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       key: notifier.scaffoldKey,
-      drawer: MenuDrawer(),
+      drawer: MenuDrawer(currentScreen: "Home",),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
           bottom: 75,

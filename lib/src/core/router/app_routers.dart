@@ -6,4 +6,5 @@ class AppRoutes {
   static const String historyRoute = '/history-screen';
   static const String addTaskRoute = '/add-task';
   static const String notificationRoute = '/notification-screen';
+  static const String profile_screen = "/profile_screen";
 }
