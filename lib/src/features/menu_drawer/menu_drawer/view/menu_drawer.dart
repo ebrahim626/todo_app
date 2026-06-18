@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/src/core/router/app_routers.dart';
 import 'package:todo_app/src/features/home/controller/home_controller.dart';
-import 'package:todo_app/src/features/menu_drawer/controller/menu_drawer_controller.dart';
-import '../../../core/utils/extensions/context.dart';
-import '../../../core/utils/extensions/gap.dart';
-import '../../common/view/bottom_sheet/warning_bottom_sheet.dart';
-import '../../common/view/buttom/custom_rectangular_button.dart';
-import '../../common/view/menu/menu_item.dart';
+import '../../../../core/utils/extensions/context.dart';
+import '../../../../core/utils/extensions/gap.dart';
+import '../../../common/view/bottom_sheet/warning_bottom_sheet.dart';
+import '../../../common/view/buttom/custom_rectangular_button.dart';
+import '../../../common/view/menu/menu_item.dart';
+import '../controller/menu_drawer_controller.dart';
 
 class MenuDrawer extends ConsumerWidget {
   const MenuDrawer({super.key, required this.currentScreen});
@@ -44,7 +44,7 @@ class MenuDrawer extends ConsumerWidget {
 
             // Menu Appointments
             MenuItem(
-              isSelected: currentScreen == "Home" ? true : notifier.selectedMenu == Menu.taskCalender,
+              isSelected: currentScreen == "Home" ? true : false,
               icon: Icons.calendar_today_outlined,
               title: "Task Calender",
               onTap: () {

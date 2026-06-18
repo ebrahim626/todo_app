@@ -56,7 +56,7 @@ class AppBottomSheetWidget extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                   icon: HugeIcon(
                     icon: HugeIcons.strokeRoundedMultiplicationSign,
-                    color: context.theme.primaryColorDark,
+                    color: context.theme.dividerColor,
                   ),
                 ),
               ],

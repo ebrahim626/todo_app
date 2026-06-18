@@ -12,10 +12,10 @@ import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
 import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
 import 'package:todo_app/src/features/home/view/components/task_status.dart';
-import 'package:todo_app/src/features/menu_drawer/view/menu_drawer.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../common/view/divider/app_divider.dart';
+import '../../menu_drawer/menu_drawer/view/menu_drawer.dart';
 import 'components/status_dots.dart';
 
 class HomeScreen extends ConsumerWidget {

@@ -25,7 +25,8 @@ class ProfileScreen extends StatelessWidget {
         ),
 
         centerTitle: true,
-        title: Text("Add Todo Task",
+        title: Text(
+          "Add Todo Task",
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
             color: textColor,
@@ -71,9 +72,7 @@ class ProfileScreen extends StatelessWidget {
                 backgroundColor: Colors.white,
                 width: MediaQuery.sizeOf(context).width * 0.9,
                 items: [],
-                onSelectionChanged: (v) {
-
-                },
+                onSelectionChanged: (v) {},
                 itemToString: (item) => item,
               ),
               14.ph,

@@ -17,6 +17,7 @@ import '../../common/view/bottom_sheet/warning_bottom_sheet.dart';
 import '../../home/view/components/card_status_widget.dart';
 import '../../home/view/components/task_priority.dart';
 import '../../home/view/components/task_status.dart';
+import '../../menu_drawer/menu_drawer/view/menu_drawer.dart';
 
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
@@ -30,6 +31,8 @@ class HistoryScreen extends ConsumerWidget {
     final unreadCount = ref.watch(unreadCountProvider); // 👈 reactive, persists across tabs
 
     return Scaffold(
+      key: notifier.scaffoldKey,
+      drawer: MenuDrawer(currentScreen: "History"),
       backgroundColor: backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 45),
@@ -40,7 +43,9 @@ class HistoryScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      notifier.scaffoldKey.currentState?.openDrawer();
+                    },
                     icon: Icon(Icons.menu, size: 32),
                     padding: EdgeInsets.zero,
                     constraints:
