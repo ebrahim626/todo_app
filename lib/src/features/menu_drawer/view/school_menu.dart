@@ -12,7 +12,6 @@ class SchoolMenuDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Drawer(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -41,9 +40,7 @@ class SchoolMenuDrawer extends ConsumerWidget {
               isSelected: false,
               icon: Icons.calendar_today_outlined,
               title: "Task Calender",
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
 
             // Menu Schedule List
@@ -51,9 +48,7 @@ class SchoolMenuDrawer extends ConsumerWidget {
               isSelected: false,
               icon: Icons.history,
               title: "History",
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
 
             // Menu Schedule List
@@ -61,9 +56,7 @@ class SchoolMenuDrawer extends ConsumerWidget {
               isSelected: false,
               icon: Icons.manage_accounts_outlined,
               title: "Profile",
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
 
             ListTile(
@@ -74,9 +67,8 @@ class SchoolMenuDrawer extends ConsumerWidget {
                   subtitle:
                       "Please confirm if you would like to end your session.",
                   primaryButtonText: "Logout",
-                  onPrimaryButtonPressed: () {
-
-                  },
+                  onPrimaryButtonPressed: () {},
+                  isOneButton: true,
                 );
               },
 
