@@ -19,19 +19,19 @@ class MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: isSelected ? Color(0xffe6f4f4) : Colors.transparent,
+      tileColor: isSelected ? primaryColor : Colors.transparent,
       shape: const RoundedRectangleBorder(),
       onTap: onTap,
       leading: Icon(
         icon,
         size: 24,
-        color: isSelected ? primaryColor : bodyTextColor,
+        color: isSelected ? Colors.white : bodyTextColor,
       ),
       title: Text(
         title,
         style: context.text.titleSmall?.copyWith(
           fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-          color: isSelected ? primaryColor : textColor,
+          color: isSelected ? Colors.white : textColor,
         ),
       ),
     );

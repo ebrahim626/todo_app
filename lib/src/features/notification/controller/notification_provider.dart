@@ -7,6 +7,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/notification/notification_model/response/Notification_response.dart';
 import 'package:todo_app/src/features/notification/repository/notification_repository.dart';
+import 'package:todo_app/src/shared/bottom_nev_bar/bottom_nev_bar.dart';
 import '../../../shared/toast/toast.dart';
 
 typedef NotificationNotifier =
@@ -63,13 +64,12 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
 
   Future<void> markAsRead() async {
     try {
-      isLoading = true;
       final repo = ref.read(notificationRepository);
       final response = await repo.markAsRead();
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log("Notification marked as read successfully");
-        ref.read(homeControllerProvider.notifier).getAllTasks();
+        ref.read(unreadCountProvider.notifier).state = 0;
         FlashCard.showSuccess(message: response.data["message"]);
 
       } else {
@@ -81,21 +81,6 @@ class NotificationProvider extends AutoDisposeAsyncNotifier {
         errorMessage: "An error occurred while marking notifications.",
       );
     }finally {
-      isLoading = false;
-    }
-  }
-
-  Future<void> handleBack(
-      BuildContext context,
-      NotificationProvider notifier,
-      int unreadCount,
-      ) async {
-    if (unreadCount > 0) {
-      await notifier.markAsRead();
-    }
-
-    if (context.mounted) {
-      context.pop();
     }
   }
 

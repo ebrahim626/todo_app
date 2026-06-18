@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/src/core/router/app_routers.dart';
-import 'package:todo_app/src/features/home/controller/home_controller.dart';
+import 'package:todo_app/src/core/utils/theme/theme.dart';
 import '../../../../core/utils/extensions/context.dart';
 import '../../../../core/utils/extensions/gap.dart';
 import '../../../common/view/bottom_sheet/warning_bottom_sheet.dart';
@@ -20,7 +20,7 @@ class MenuDrawer extends ConsumerWidget {
     ref.watch(menuProvider);
     final notifier = ref.read(menuProvider.notifier);
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: SafeArea(
         child: ListView(
@@ -48,7 +48,7 @@ class MenuDrawer extends ConsumerWidget {
               icon: Icons.calendar_today_outlined,
               title: "Task Calender",
               onTap: () {
-                if (currentScreen == "Home"){
+                if (currentScreen == "Home") {
                   context.pop();
                   return;
                 }
@@ -64,7 +64,7 @@ class MenuDrawer extends ConsumerWidget {
               icon: Icons.history,
               title: "History",
               onTap: () {
-                if (currentScreen == "History"){
+                if (currentScreen == "History") {
                   context.pop();
                   return;
                 }
@@ -76,7 +76,7 @@ class MenuDrawer extends ConsumerWidget {
 
             // Menu Schedule List
             MenuItem(
-              isSelected:  false,
+              isSelected: false,
               icon: Icons.manage_accounts_outlined,
               title: "Profile",
               onTap: () {
