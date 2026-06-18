@@ -12,7 +12,7 @@ import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/home/view/components/card_status_widget.dart';
 import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
 import 'package:todo_app/src/features/home/view/components/task_status.dart';
-import 'package:todo_app/src/features/menu_drawer/view/school_menu.dart';
+import 'package:todo_app/src/features/menu_drawer/view/menu_drawer.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../common/view/divider/app_divider.dart';
@@ -31,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       key: notifier.scaffoldKey,
-      drawer: SchoolMenuDrawer(),
+      drawer: MenuDrawer(),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
           bottom: 75,

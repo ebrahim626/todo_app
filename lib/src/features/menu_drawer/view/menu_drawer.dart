@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/src/features/menu_drawer/controller/menu_drawer_controller.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../common/view/bottom_sheet/warning_bottom_sheet.dart';
 import '../../common/view/buttom/custom_rectangular_button.dart';
 import '../../common/view/menu/menu_item.dart';
 
-class SchoolMenuDrawer extends ConsumerWidget {
-  const SchoolMenuDrawer({super.key});
+class MenuDrawer extends ConsumerWidget {
+  const MenuDrawer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(menuProvider);
+    final notifier = ref.read(menuProvider.notifier);
     return Drawer(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -67,7 +70,9 @@ class SchoolMenuDrawer extends ConsumerWidget {
                   subtitle:
                       "Please confirm if you would like to end your session.",
                   primaryButtonText: "Logout",
-                  onPrimaryButtonPressed: () {},
+                  onPrimaryButtonPressed: () {
+                    notifier.logOut(context);
+                  },
                   isOneButton: true,
                 );
               },

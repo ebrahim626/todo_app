@@ -88,12 +88,6 @@ class HomeController extends AutoDisposeAsyncNotifier {
     return taskColorMap[key] ?? [];
   }
 
-  Future<void> logOut(BuildContext context) async {
-    ref.watch(cacheServiceProvider);
-    await ref.read(cacheServiceProvider).clearAuthTokens();
-    context.push(AppRoutes.splashScreenRoute);
-  }
-
   Future<void> refresh({DateTime? date}) async {
     selectedDate = DateTime.now();
     await initial();
