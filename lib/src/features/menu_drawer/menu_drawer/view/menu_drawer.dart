@@ -5,6 +5,7 @@ import 'package:todo_app/src/core/router/app_routers.dart';
 import 'package:todo_app/src/core/utils/theme/theme.dart';
 import '../../../../core/utils/extensions/context.dart';
 import '../../../../core/utils/extensions/gap.dart';
+import '../../../common/providers/unreadCountProvider.dart';
 import '../../../common/view/bottom_sheet/warning_bottom_sheet.dart';
 import '../../../common/view/buttom/custom_rectangular_button.dart';
 import '../../../common/view/menu/menu_item.dart';
@@ -32,7 +33,7 @@ class MenuDrawer extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: CustomRectangularButton(
                     onTap: () {
-                      context.pop();
+                      ref.read(shellScaffoldKeyProvider).currentState?.closeDrawer(); // 👈
                     },
                     icon: Icons.arrow_back_ios_new_sharp,
                   ),

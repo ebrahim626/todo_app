@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:todo_app/src/features/home/controller/home_controller.dart';
 import 'package:todo_app/src/features/notification/notification_model/response/Notification_response.dart';
 import 'package:todo_app/src/features/notification/repository/notification_repository.dart';
-import 'package:todo_app/src/shared/bottom_nev_bar/bottom_nev_bar.dart';
 import '../../../shared/toast/toast.dart';
+import '../../common/providers/drawer_key_provider.dart';
 
 typedef NotificationNotifier =
     AutoDisposeAsyncNotifierProvider<NotificationProvider, void>;

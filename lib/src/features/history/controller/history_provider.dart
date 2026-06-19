@@ -18,7 +18,6 @@ typedef HistoryNotifier = AsyncNotifierProvider<HistoryProvider, void>;
 final historyProvider = HistoryNotifier(HistoryProvider.new);
 
 class HistoryProvider extends AsyncNotifier {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   final PagingController<int, TodoModel> taskPagingController =
       PagingController(firstPageKey: 1);
   int? selectedTaskStatus;

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/core/service/time_formatter.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
 import 'package:todo_app/src/features/common/view/custom_widgets/no_item_found_container.dart';
 import 'package:todo_app/src/features/notification/controller/notification_provider.dart';
 import 'package:todo_app/src/features/notification/notification_model/response/Notification_response.dart';
-import 'package:todo_app/src/shared/bottom_nev_bar/bottom_nev_bar.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../../core/utils/theme/theme.dart';
+import '../../common/providers/drawer_key_provider.dart';
 
 class NotificationScreen extends ConsumerWidget {
   const NotificationScreen({super.key});

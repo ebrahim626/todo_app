@@ -14,8 +14,8 @@ import 'package:todo_app/src/features/home/view/components/home_calendar.dart';
 import 'package:todo_app/src/features/home/view/components/task_status.dart';
 import '../../../core/utils/extensions/context.dart';
 import '../../../core/utils/extensions/gap.dart';
+import '../../common/providers/unreadCountProvider.dart';
 import '../../common/view/divider/app_divider.dart';
-import '../../menu_drawer/menu_drawer/view/menu_drawer.dart';
 import 'components/status_dots.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -30,8 +30,8 @@ class HomeScreen extends ConsumerWidget {
     final tasks = ref.watch(homeControllerProvider.notifier).todoTasks;
 
     return Scaffold(
-      key: notifier.scaffoldKey,
-      drawer: MenuDrawer(currentScreen: "Home",),
+      // key: notifier.scaffoldKey,
+      // drawer: MenuDrawer(currentScreen: "Home",),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(
           bottom: 75,
@@ -64,7 +64,7 @@ class HomeScreen extends ConsumerWidget {
                 Spacer(),
                 IconButton(
                   onPressed: () {
-                    notifier.scaffoldKey.currentState?.openDrawer();
+                    ref.read(shellScaffoldKeyProvider).currentState?.openDrawer(); // 👈
                   },
                   icon: Icon(Icons.menu, size: 32),
                   padding: EdgeInsets.zero,

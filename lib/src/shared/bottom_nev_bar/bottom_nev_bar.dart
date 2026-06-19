@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/router/app_routers.dart';
+import '../../features/common/providers/drawer_key_provider.dart';
+import '../../features/common/providers/unreadCountProvider.dart';
+import '../../features/menu_drawer/menu_drawer/view/menu_drawer.dart';
 import 'components/bottom_nav_container.dart';
 import 'components/build_item.dart';
-
-final unreadCountProvider = StateProvider<int>((ref) => 0);
 
 class BottomNavBar extends ConsumerWidget {
   const BottomNavBar({super.key, required this.child});
@@ -15,8 +16,15 @@ class BottomNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final unreadCount = ref.watch(unreadCountProvider);
+    final scaffoldKey = ref.watch(shellScaffoldKeyProvider);
+
+    // Determine current screen from router
+    final location = GoRouterState.of(context).uri.toString();
+    final currentScreen = location.contains('history') ? 'History' : 'Home';
 
     return Scaffold(
+      key: scaffoldKey,                              // 👈 shell scaffold key
+      drawer: MenuDrawer(currentScreen: currentScreen), // 👈 drawer here
       body: child,
       extendBody: true,
       bottomNavigationBar: BottomNavContainer(

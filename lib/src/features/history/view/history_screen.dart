@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:todo_app/src/core/service/date_formatter.dart';
 import 'package:todo_app/src/core/utils/extensions/context.dart';
+import 'package:todo_app/src/features/common/providers/unreadCountProvider.dart';
 import 'package:todo_app/src/features/common/view/custom_widgets/no_item_found_container.dart';
 import 'package:todo_app/src/features/common/view/divider/app_divider.dart';
 import 'package:todo_app/src/features/history/controller/history_provider.dart';
@@ -12,7 +13,7 @@ import '../../../core/router/app_routers.dart';
 import '../../../core/service/time_formatter.dart';
 import '../../../core/utils/extensions/gap.dart';
 import '../../../core/utils/theme/theme.dart';
-import '../../../shared/bottom_nev_bar/bottom_nev_bar.dart';
+import '../../common/providers/drawer_key_provider.dart';
 import '../../common/view/bottom_sheet/warning_bottom_sheet.dart';
 import '../../home/view/components/card_status_widget.dart';
 import '../../home/view/components/task_priority.dart';
@@ -31,8 +32,6 @@ class HistoryScreen extends ConsumerWidget {
     final unreadCount = ref.watch(unreadCountProvider); // 👈 reactive, persists across tabs
 
     return Scaffold(
-      key: notifier.scaffoldKey,
-      drawer: MenuDrawer(currentScreen: "History"),
       backgroundColor: backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 45),
@@ -44,7 +43,7 @@ class HistoryScreen extends ConsumerWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      notifier.scaffoldKey.currentState?.openDrawer();
+                      ref.read(shellScaffoldKeyProvider).currentState?.openDrawer();
                     },
                     icon: Icon(Icons.menu, size: 32),
                     padding: EdgeInsets.zero,
