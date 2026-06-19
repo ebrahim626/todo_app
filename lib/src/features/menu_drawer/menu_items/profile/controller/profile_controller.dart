@@ -14,8 +14,8 @@ final profileProvider = ProfileNotifier(ProfileProvider.new);
 
 class ProfileProvider extends AutoDisposeAsyncNotifier {
   UserProfileModel? userProfileData;
-  TextEditingController? emailController;
-  TextEditingController? nameController;
+  TextEditingController? emailController = TextEditingController();
+  TextEditingController? nameController = TextEditingController();
 
   @override
   FutureOr<dynamic> build() {
