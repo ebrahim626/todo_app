@@ -100,7 +100,7 @@ class LocalNotificationsService {
       channelDescription: _androidChannel.description,
       importance: Importance.max,
       priority: Priority.high,
-      // sound: const RawResourceAndroidNotificationSound('notification_sound'),
+      sound: const RawResourceAndroidNotificationSound('notification_sound'),
     );
 
     // iOS-specific notification details

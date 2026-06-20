@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'package:app_badger/app_badger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../features/common/providers/drawer_key_provider.dart';
 import 'notification_service.dart';
 
 
@@ -18,13 +20,16 @@ class FirebaseMessagingService {
 
   // Reference to local notifications service for displaying notifications
   LocalNotificationsService? _localNotificationsService;
+  ProviderContainer? _container; // 👈 add this
 
   /// Initialize Firebase Messaging and sets up all message listeners
   Future<void> init({
     required LocalNotificationsService localNotificationsService,
+    required ProviderContainer container, // 👈 add this
   }) async {
     // Init local notifications service
     _localNotificationsService = localNotificationsService;
+    _container = container;
 
     // Handle FCM token
     _handlePushNotificationsToken();
@@ -131,6 +136,10 @@ class FirebaseMessagingService {
   /// Handles messages received while the app is in the foreground
   void _onForegroundMessage(RemoteMessage message) async {
     log('Foreground message received: ${message.data.toString()}');
+
+    // ✅ Increment unread count instantly
+    _container?.read(unreadCountProvider.notifier).state++;
+
     //await _updateBadgeCount(30, 'foreground');
     //final messageController = Get.find<MessageController>();
     //await messageController.fetchMessages();

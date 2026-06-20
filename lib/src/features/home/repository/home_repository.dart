@@ -28,7 +28,7 @@ class HomeRepository {
         if (date != null) 'dueDateTo': DateFormat("yyyy-MM-dd").format(date),
         'utcOffsetMinutes': offset.inMinutes.toString(), // ✅ "360"
         'History': isHistory,
-        'pageSize' : pageSize ?? 100,
+        'pageSize' : pageSize ?? 1000,
         "page" : page ?? 1,
       },
     );

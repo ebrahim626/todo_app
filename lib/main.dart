@@ -16,9 +16,7 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Hive service
   await Hive.initFlutter();
@@ -27,14 +25,18 @@ Future<void> main() async {
   //Local Notifications
   final localNotificationService = LocalNotificationsService.instance();
   await localNotificationService.init();
+  final container = ProviderContainer(); // 👈
 
   // Firebase Messaging (Depends on notifications service)
   final firebaseMessagingService = FirebaseMessagingService.instance();
-  firebaseMessagingService.init(localNotificationsService: localNotificationService);
+  firebaseMessagingService.init(
+    localNotificationsService: localNotificationService,
+    container: container,
+  );
 
   await ScreenUtil.ensureScreenSize();
 
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
 void configEasyLoading(BuildContext context) {
@@ -48,7 +50,10 @@ void configEasyLoading(BuildContext context) {
     ..indicatorColor = Colors.transparent
     ..textColor = Colors.transparent
     // ..maskColor = Colors.black.withOpacity(0.3)
-    ..maskColor = Colors.black.withAlpha(20) // Very light mask for better visibility of the rotating ring, but still prevents interactions
+    ..maskColor = Colors.black
+        .withAlpha(
+          20,
+        ) // Very light mask for better visibility of the rotating ring, but still prevents interactions
     ..maskType = EasyLoadingMaskType.custom
     ..userInteractions = false
     ..dismissOnTap = false
@@ -105,7 +110,10 @@ class MyApp extends ConsumerWidget {
               topBarSize = context.padding.top;
               bottomViewPadding = context.padding.bottom;
               return MediaQuery(
-                data: context.mq.copyWith(devicePixelRatio: 1.0, textScaler: const TextScaler.linear(1.0)),
+                data: context.mq.copyWith(
+                  devicePixelRatio: 1.0,
+                  textScaler: const TextScaler.linear(1.0),
+                ),
                 child: child!,
               );
             },
